@@ -1,26 +1,47 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --text-primary-w: white;
+  --text-secondary-w: rgba(255, 255, 255, 0.8);
+  --text-overlay: rgba(255, 255, 255, 0.5);
+  --text-primary: #090908;
+  --text-secondary: rgba(9, 9, 8, 0.8);
+  --text-tertiary: rgba(9, 9, 8, 0.7);
+  --bg-surface: #f5f5f3;
+  --bg-surface-2: #e8eaea;
+  --bg-overlay: rgba(12, 13, 13, 0.7);
+  --border-default: rgba(9, 9, 8, 0.2);
+  --placeholder: rgba(9, 9, 8, 0.5);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 35s linear infinite;
+}
+
+@keyframes scroll-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+.animate-scroll-float {
+  animation: scroll-float 2.4s ease-in-out infinite;
 }
