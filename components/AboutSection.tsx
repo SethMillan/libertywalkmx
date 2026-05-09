@@ -76,7 +76,7 @@ export default function AboutSection() {
               color: "var(--text-secondary-w)",
             }}
           >
-            EST. 2005 — NAGOYA, JAPAN
+            EST. 1993 — NAGOYA, JAPAN
           </p>
         </div>
       </div>
@@ -146,7 +146,7 @@ export default function AboutSection() {
               color: "var(--text-secondary-w)",
             }}
           >
-            EST. 2005 — NAGOYA, JAPAN
+            EST. 1993 — NAGOYA, JAPAN
           </p>
         </div>
       </div>
@@ -213,7 +213,7 @@ export default function AboutSection() {
               color: "var(--text-secondary-w)",
             }}
           >
-            EST. 2005 — NAGOYA, JAPAN
+            EST. 1993 — NAGOYA, JAPAN
           </p>
         </div>
       </div>
