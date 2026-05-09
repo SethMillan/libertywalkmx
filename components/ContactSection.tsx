@@ -40,12 +40,23 @@ export default function ContactSection() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
+        if (data.debug)
+          console.error("[ContactSection] SMTP debug:", data.debug);
         throw new Error(data.error || "Error al enviar");
       }
       setStatus("success");
-      setForm({ nombre: "", email: "", telefono: "", vehiculo: "", proyecto: "" });
+      setForm({
+        nombre: "",
+        email: "",
+        telefono: "",
+        vehiculo: "",
+        proyecto: "",
+      });
+      setTimeout(() => setStatus("idle"), 1800);
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : "Error al enviar el correo.");
+      setErrorMsg(
+        err instanceof Error ? err.message : "Error al enviar el correo.",
+      );
       setStatus("error");
     }
   };
@@ -97,12 +108,12 @@ export default function ContactSection() {
   return (
     <section
       id="contacto"
-      className="relative w-full p-20"
+      className="relative w-full pt-10"
       style={{ background: "rgba(255,255,255,0.8)" }}
     >
-      <div className="px-5 sm:px-8 md:px-10 lg:px-20 xl:px-40 pt-14 md:pt-16 lg:pt-20 pb-16">
-        <div className="mx-auto w-full max-w-6xl">
-          <div className="mx-auto w-full max-w-4xl text-left mb-12 md:mb-14">
+      <div className="px-5 sm:px-8 md:px-10 lg:px-20 xl:px-40 pt-14 md:pt-16 lg:pt-20 pb-16 ">
+        <div className="mx-auto w-full max-w-6xl ">
+          <div className="mx-auto w-full max-w-4xl text-left mb-12 md:mb-14 px-20">
             <p
               className="text-[16px] font-medium tracking-[3.2px] capitalize mb-4"
               style={{
@@ -179,21 +190,37 @@ export default function ContactSection() {
               </div>
 
               <div className="flex gap-4 md:pt-6">
-                <img
-                  src={ASSETS.iconSocial}
-                  alt="Redes sociales"
-                  className="w-6 h-6"
-                />
-                <img
-                  src={ASSETS.iconSocial2}
-                  alt="Redes sociales"
-                  className="w-6 h-6"
-                />
+                <a
+                  href="https://www.instagram.com/libertywalkmx?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram Liberty Walk México"
+                  className="cursor-pointer"
+                >
+                  <img
+                    src={ASSETS.iconSocial}
+                    alt="Instagram"
+                    className="w-6 h-6"
+                  />
+                </a>
+                <a
+                  href="https://www.tiktok.com/@libertywalkmx?_r=1&_t=ZS-96E4MgjvqCK"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="TikTok Liberty Walk México"
+                  className="cursor-pointer"
+                >
+                  <img
+                    src={ASSETS.iconSocial2}
+                    alt="TikTok"
+                    className="w-6 h-6"
+                  />
+                </a>
               </div>
             </div>
           </div>
 
-          <div className="w-full flex justify-center">
+          <div className="w-full flex justify-center px-10">
             <div
               className="w-full max-w-3xl border shadow-sm"
               style={{
@@ -253,39 +280,47 @@ export default function ContactSection() {
                 {status === "error" && (
                   <p
                     className="mt-4 text-center text-sm"
-                    style={{ color: "#c0392b", fontFamily: "var(--font-barlow), sans-serif" }}
+                    style={{
+                      color: "#c0392b",
+                      fontFamily: "var(--font-barlow), sans-serif",
+                    }}
                   >
                     {errorMsg}
                   </p>
                 )}
 
-                {status === "success" ? (
-                  <p
-                    className="mt-6 text-center text-[18px] font-medium"
-                    style={{ fontFamily: "var(--font-oswald), sans-serif", color: "var(--text-primary)" }}
-                  >
-                    ¡Solicitud enviada! Te contactaremos pronto.
-                  </p>
-                ) : (
-                  <button
-                    type="submit"
-                    disabled={status === "loading"}
-                    className="group relative overflow-hidden mt-6 h-14 md:h-15 lg:h-16 w-full text-[20px] md:text-[22px] lg:text-[24px] font-medium uppercase cursor-pointer transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-[0_14px_28px_rgba(0,0,0,0.2)] hover:brightness-110 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:scale-100 disabled:hover:shadow-none"
-                    style={{
-                      fontFamily: "var(--font-oswald), sans-serif",
-                      background: "var(--text-primary)",
-                      color: "var(--text-primary-w)",
-                    }}
-                  >
+                <button
+                  type="submit"
+                  disabled={status === "loading" || status === "success"}
+                  className="group relative overflow-hidden mt-6 h-14 md:h-15 lg:h-16 w-full text-[20px] md:text-[22px] lg:text-[24px] font-medium uppercase cursor-pointer transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-[0_14px_28px_rgba(0,0,0,0.2)] hover:brightness-110 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:scale-100 disabled:hover:shadow-none"
+                  style={{
+                    fontFamily: "var(--font-oswald), sans-serif",
+                    background:
+                      status === "success" ? "#f5f5f3" : "var(--text-primary)",
+                    color:
+                      status === "success"
+                        ? "var(--text-primary)"
+                        : "var(--text-primary-w)",
+                    border:
+                      status === "success"
+                        ? "1px solid rgba(9,9,8,0.2)"
+                        : "none",
+                    transition: "background 0.3s ease, color 0.3s ease",
+                  }}
+                >
+                  {status !== "success" && (
                     <span
                       className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-linear-to-r from-transparent via-white/55 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[360%]"
                       aria-hidden="true"
                     />
-                    <span className="relative z-10">
-                      {status === "loading" ? "ENVIANDO..." : "ENVIAR SOLICITUD →"}
-                    </span>
-                  </button>
-                )}
+                  )}
+                  <span className="relative z-10">
+                    {status === "loading" && "ENVIANDO..."}
+                    {status === "success" && "✓ SOLICITUD ENVIADA"}
+                    {(status === "idle" || status === "error") &&
+                      "ENVIAR SOLICITUD →"}
+                  </span>
+                </button>
               </form>
             </div>
           </div>
