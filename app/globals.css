@@ -30,11 +30,12 @@ body {
 }
 
 .animate-marquee {
-  animation: marquee 35s linear infinite;
+  animation: marquee 18s linear infinite;
 }
 
 @keyframes scroll-float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {

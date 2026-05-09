@@ -21,8 +21,8 @@ const CARS = [
   },
   {
     name: "McLaren 720S",
-    image: "/mclaren-720.png",
-    mobileImage: "/telefono/mclren.png",
+    image: "/mclaren.png",
+    mobileImage: "/telefono/mclaren.png",
   },
 ];
 
