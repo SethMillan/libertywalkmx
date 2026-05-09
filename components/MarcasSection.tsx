@@ -51,7 +51,7 @@ export default function MarcasSection() {
   return (
     <section
       id="body-kits"
-      className="relative w-full pl-40 pr-40 pb-20"
+      className="relative w-full md:pl-40 md:pr-40 pl-20 pr-20  pb-20"
       style={{ background: "var(--bg-surface-2)" }}
     >
       <div className="pt-[66px] md:pt-[97px]">

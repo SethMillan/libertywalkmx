@@ -54,7 +54,7 @@ export default function CTASection() {
             e.preventDefault();
             slowScrollToHash("#contacto");
           }}
-          className="group relative overflow-hidden flex items-center justify-center h-[60px] md:h-[74px] w-[241px] md:w-[336px] font-normal uppercase transition-all duration-300 ease-out hover:-translate-y-[2px] hover:scale-[1.02] hover:shadow-[0_14px_28px_rgba(0,0,0,0.35)] hover:brightness-110"
+          className="group relative overflow-hidden flex items-center justify-center h-[60px] md:h-[74px] w-[241px] md:w-[336px] font-normal uppercase cursor-pointer transition-all duration-300 ease-out hover:-translate-y-[2px] hover:scale-[1.02] hover:shadow-[0_14px_28px_rgba(0,0,0,0.35)] hover:brightness-110"
           style={{
             fontFamily: "var(--font-oswald), sans-serif",
             fontSize: "clamp(24px, 5vw, 36px)",
