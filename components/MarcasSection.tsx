@@ -1,6 +1,6 @@
 "use client";
 
-const row1 = [
+const brands = [
   "Ferrari",
   "Lamborghini",
   "McLaren",
@@ -10,8 +10,6 @@ const row1 = [
   "Mercedes",
   "Audi",
   "Toyota",
-];
-const row2 = [
   "Ford",
   "Mazda",
   "Dodge",
@@ -51,10 +49,10 @@ export default function MarcasSection() {
   return (
     <section
       id="body-kits"
-      className="relative w-full md:pl-40 md:pr-40 pl-20 pr-20  pb-20"
+      className="relative w-full px-15 md:px-20  lg:px-20 xl:px-40 pb-20"
       style={{ background: "var(--bg-surface-2)" }}
     >
-      <div className="pt-[66px] md:pt-[97px]">
+      <div className="pt-16.5 md:pt-24.25">
         <p
           className="text-[18px] md:text-[20px] font-medium tracking-[3.6px] md:tracking-[4px] capitalize mb-3 md:mb-4"
           style={{
@@ -74,23 +72,12 @@ export default function MarcasSection() {
           MARCAS
         </h2>
 
-        {/* Filter buttons – flex-wrap on both mobile and desktop */}
-        <div className="flex flex-wrap gap-2 mb-2">
-          {row1.map((brand) => (
+        {/* Filter buttons – responsive chips */}
+        <div className="mb-8 md:mb-10 flex max-w-180 flex-wrap justify-start gap-2">
+          {brands.map((brand) => (
             <button
               key={brand}
-              className="h-[42px] px-3 md:px-4 border text-[16px] md:text-[16px] font-medium uppercase transition-all duration-200 hover:-translate-y-[1px] hover:border-[var(--text-primary)] hover:bg-[rgba(9,9,8,0.14)] hover:text-[var(--text-primary)] hover:shadow-[0px_8px_18px_rgba(0,0,0,0.28)]"
-              style={btnStyle}
-            >
-              {brand}
-            </button>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-2 mb-8 md:mb-10">
-          {row2.map((brand) => (
-            <button
-              key={brand}
-              className="h-[42px] px-3 md:px-4 border text-[16px] font-medium uppercase transition-all duration-200 hover:-translate-y-[1px] hover:border-[var(--text-primary)] hover:bg-[rgba(9,9,8,0.14)] hover:text-[var(--text-primary)] hover:shadow-[0px_8px_18px_rgba(0,0,0,0.28)]"
+              className="inline-flex h-10.5 w-fit shrink-0 items-center justify-center whitespace-nowrap border px-3 text-[16px] leading-none font-medium uppercase transition-all duration-200 hover:-translate-y-px hover:border-(--text-primary) hover:bg-[rgba(9,9,8,0.14)] hover:text-(--text-primary) hover:shadow-[0px_8px_18px_rgba(0,0,0,0.28)]"
               style={btnStyle}
             >
               {brand}
@@ -106,7 +93,7 @@ export default function MarcasSection() {
             key={title}
             className={`flex-1 flex flex-col justify-center px-6 sm:px-8 md:px-10 py-8 md:py-10 ${
               i < cards.length - 1
-                ? "border-b border-b-[var(--border-default)] md:border-b-0 md:border-r md:border-r-[var(--border-default)]"
+                ? "border-b border-b-(--border-default) md:border-b-0 md:border-r md:border-r-(--border-default)"
                 : ""
             }`}
             style={{
@@ -122,7 +109,7 @@ export default function MarcasSection() {
               ★
             </span>
             <p
-              className="text-[22px] md:text-[24px] font-medium mb-3 w-full max-w-[311px]"
+              className="text-[22px] md:text-[24px] font-medium mb-3 w-full max-w-77.75"
               style={{
                 fontFamily: "var(--font-oswald), sans-serif",
                 color: "var(--text-primary)",
@@ -131,7 +118,7 @@ export default function MarcasSection() {
               {title}
             </p>
             <p
-              className="text-[15px] md:text-[16px] not-italic leading-snug w-full max-w-[238px]"
+              className="text-[15px] md:text-[16px] not-italic leading-snug w-full max-w-59.5"
               style={{
                 fontFamily: "var(--font-barlow), sans-serif",
                 color: "var(--text-secondary)",

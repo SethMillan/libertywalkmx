@@ -4,10 +4,26 @@ import { useState, useEffect, useCallback } from "react";
 import { ASSETS } from "@/lib/assets";
 
 const CARS = [
-  { name: "Lamborghini Aventador", image: "/aventador.png" },
-  { name: "Ferrari 488", image: "/ferrari-488.png" },
-  { name: "Lamborghini Huracan", image: "/huracan.png" },
-  { name: "McLaren 720S", image: "/mclaren-720.png" },
+  {
+    name: "Lamborghini Aventador",
+    image: "/aventador.png",
+    mobileImage: "/telefono/aventador.png",
+  },
+  {
+    name: "Ferrari 488",
+    image: "/ferrari-488.png",
+    mobileImage: "/telefono/ferrari-488.png",
+  },
+  {
+    name: "Lamborghini Huracan",
+    image: "/huracan.png",
+    mobileImage: "/telefono/huracan.png",
+  },
+  {
+    name: "McLaren 720S",
+    image: "/mclaren-720.png",
+    mobileImage: "/telefono/mclren.png",
+  },
 ];
 
 const INTERVAL_MS = 5000;
@@ -39,21 +55,22 @@ export default function HeroSection() {
   return (
     <section
       id="inicio"
-      className="relative w-full h-screen min-h-[700px] overflow-hidden"
+      className="relative w-full h-screen min-h-175 overflow-hidden"
     >
       {/* Fondos en crossfade */}
       {CARS.map((car, i) => (
-        <img
+        <picture
           key={car.name}
-          src={car.image}
-          alt={car.name}
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-1000"
+          className="absolute inset-0 w-full h-full pointer-events-none transition-opacity duration-1000"
           style={{
             opacity: i === current ? 1 : 0,
             filter: "brightness(0.55) contrast(0.8) saturate(1.2)",
           }}
           aria-hidden="true"
-        />
+        >
+          <source media="(max-width: 767px)" srcSet={car.mobileImage} />
+          <img src={car.image} alt="" className="w-full h-full object-cover" />
+        </picture>
       ))}
 
       {/* Glow ellipse */}
@@ -66,7 +83,7 @@ export default function HeroSection() {
       </div>
 
       {/* Degradado inferior */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
       {/* Overlay negro con opacidad */}
       <div
@@ -156,7 +173,7 @@ export default function HeroSection() {
                 {name}
               </span>
               <div
-                className="h-[2px] shrink-0 transition-all duration-500"
+                className="h-0.5 shrink-0 transition-all duration-500"
                 style={{
                   width: isActive
                     ? "clamp(36px, 5vw, 64px)"
@@ -181,7 +198,7 @@ export default function HeroSection() {
           <span className="md:hidden">TAP</span>
           <span className="hidden md:inline">scroll</span>
         </span>
-        <div className="w-[2px] h-[42px] bg-white/50" />
+        <div className="w-0.5 h-10.5 bg-white/50" />
       </div>
     </section>
   );

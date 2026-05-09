@@ -42,7 +42,7 @@ export default function EventSection() {
       style={{ background: "var(--bg-surface)" }}
     >
       {/* Header */}
-      <div className="pl-20 pr-20 md:pl-[145px] md:pr-[145px] pt-[66px] md:pt-[97px]">
+      <div className="px-15 md:px-20 pt-[66px] md:pt-[97px]">
         <div
           className="flex items-center gap-2 text-[18px] md:text-[20px] font-medium tracking-[3.6px] md:tracking-[4px] capitalize mb-4 md:mb-6"
           style={{

@@ -113,7 +113,7 @@ export default function ContactSection() {
     >
       <div className="px-5 sm:px-8 md:px-10 lg:px-20 xl:px-40 pt-14 md:pt-16 lg:pt-20 pb-16 ">
         <div className="mx-auto w-full max-w-6xl ">
-          <div className="mx-auto w-full max-w-4xl text-left mb-12 md:mb-14 px-20">
+          <div className="mx-auto w-full max-w-4xl text-left mb-12 md:mb-14 px-15">
             <p
               className="text-[16px] font-medium tracking-[3.2px] capitalize mb-4"
               style={{
@@ -220,7 +220,7 @@ export default function ContactSection() {
             </div>
           </div>
 
-          <div className="w-full flex justify-center px-10">
+          <div className="w-full flex justify-center px-5">
             <div
               className="w-full max-w-3xl border shadow-sm"
               style={{
