@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Oswald, Bebas_Neue, Barlow_Condensed, Comfortaa } from "next/font/google";
+import {
+  Oswald,
+  Bebas_Neue,
+  Barlow_Condensed,
+  Comfortaa,
+} from "next/font/google";
 import "./globals.css";
 
 const oswald = Oswald({
@@ -34,6 +39,15 @@ export const metadata: Metadata = {
   title: "Liberty Walk México — Distribuidor Oficial",
   description:
     "Ayala Premium, distribuidor oficial de Liberty Walk en México. Body kits y personalización de superdeportivos al más alto nivel.",
+  icons: {
+    icon: [
+      { url: "/logo.png", type: "image/png", sizes: "32x32" },
+      { url: "/logo.png", type: "image/png", sizes: "192x192" },
+      { url: "/logo.png", type: "image/png", sizes: "512x512" },
+    ],
+    shortcut: [{ url: "/logo.png", type: "image/png", sizes: "192x192" }],
+    apple: [{ url: "/logo.png", type: "image/png", sizes: "180x180" }],
+  },
 };
 
 export default function RootLayout({

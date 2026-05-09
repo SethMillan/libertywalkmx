@@ -84,7 +84,7 @@ export default function EventSection() {
           {/* Date/details box */}
           <div
             className="relative overflow-hidden bg-white shadow-[0_18px_60px_rgba(9,9,8,0.14)]"
-            style={{ minHeight: "clamp(340px, 42vw, 520px)" }}
+            style={{ minHeight: "clamp(320px, 40vw, 500px)" }}
           >
             <div
               className="h-2 w-full"
@@ -95,7 +95,7 @@ export default function EventSection() {
             />
             <div className="flex h-full flex-col px-5 pb-6 pt-5 md:px-8 md:pb-8 md:pt-6 xl:px-10 xl:pb-10 xl:pt-8">
               <div
-                className=" pb-6 md:pb-7"
+                className="pb-5 md:pb-6"
                 style={{ borderColor: "var(--border-default)" }}
               >
                 <p
@@ -129,11 +129,11 @@ export default function EventSection() {
                 </p>
               </div>
 
-              <div className="mt-4 flex flex-1 flex-col justify-center ">
+              <div className="mt-2 md:mt-3 flex flex-col">
                 {eventData.map(({ icon, iconSize, label, value }) => (
                   <div
                     key={label}
-                    className="flex items-start gap-4 py-4 md:gap-5 md:py-5"
+                    className="flex items-start gap-4 py-3.5 md:gap-5 md:py-4"
                   >
                     <div className="mt-1 flex w-8 md:w-9 shrink-0 items-center justify-center">
                       {label === "UBICACIÓN" ? (
@@ -150,7 +150,7 @@ export default function EventSection() {
                         />
                       )}
                     </div>
-                    <div>
+                    <div className="min-w-0 flex-1">
                       <p
                         className="text-[14px] font-medium uppercase tracking-[1.8px] md:text-[15px]"
                         style={{
@@ -161,7 +161,7 @@ export default function EventSection() {
                         {label}
                       </p>
                       <p
-                        className="mt-1 block w-[clamp(210px,62vw,320px)] max-w-full border-b-[0.5px] border-black/30 pb-[2px] text-[16px] not-italic md:w-[260px] md:text-[17px]"
+                        className="mt-1 block w-full border-b-[0.5px] border-black/30 pb-1 text-[16px] not-italic md:text-[17px]"
                         style={{
                           fontFamily: "var(--font-barlow), sans-serif",
                           fontWeight: 400,
