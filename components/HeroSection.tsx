@@ -69,11 +69,7 @@ export default function HeroSection() {
           aria-hidden="true"
         >
           <source media="(max-width: 767px)" srcSet={car.mobileImage} />
-          <img
-            src={car.image}
-            alt=""
-            className="w-full h-full object-cover"
-          />
+          <img src={car.image} alt="" className="w-full h-full object-cover" />
         </picture>
       ))}
 
