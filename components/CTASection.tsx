@@ -1,6 +1,5 @@
 "use client";
 
-import { ASSETS } from "@/lib/assets";
 import { slowScrollToHash } from "@/lib/scroll";
 
 export default function CTASection() {
@@ -16,12 +15,18 @@ export default function CTASection() {
 
       {/* Glow ellipse */}
       <div
-        className="absolute pointer-events-none"
-        style={{ left: "-22%", top: "-10%", width: "144%", height: "165%" }}
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          left: "-22%",
+          top: "-10%",
+          width: "144%",
+          height: "165%",
+          background: "black",
+          filter: "blur(100px)",
+          opacity: 0.65,
+        }}
         aria-hidden="true"
-      >
-        <img src={ASSETS.ellipse4} alt="" className="w-full h-full" />
-      </div>
+      />
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-8">

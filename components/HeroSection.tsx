@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { ASSETS } from "@/lib/assets";
 
 const CARS = [
   {
@@ -75,12 +74,18 @@ export default function HeroSection() {
 
       {/* Glow ellipse */}
       <div
-        className="absolute pointer-events-none"
-        style={{ left: "-47%", top: "-34%", width: "102%", height: "188%" }}
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          left: "-47%",
+          top: "-34%",
+          width: "102%",
+          height: "188%",
+          background: "black",
+          filter: "blur(100px)",
+          opacity: 0.5,
+        }}
         aria-hidden="true"
-      >
-        <img src={ASSETS.ellipse3} alt="" className="w-full h-full" />
-      </div>
+      />
 
       {/* Degradado inferior */}
       <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
