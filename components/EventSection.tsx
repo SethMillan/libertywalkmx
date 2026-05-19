@@ -1,21 +1,56 @@
+import { ReactNode } from "react";
 import { ASSETS } from "@/lib/assets";
 
-const eventData = [
+interface EventItem {
+  icon: ReactNode;
+  label: string;
+  value: string;
+}
+
+const eventData: EventItem[] = [
   {
-    icon: ASSETS.iconLocation,
-    iconSize: "w-[14px] h-[14px] md:w-[17px] md:h-[17px]",
+    icon: (
+      <div className="relative h-[17px] w-[17px] md:h-[21px] md:w-[21px]">
+        <div className="absolute inset-0 rounded-full border border-black flex items-center justify-center">
+          <div className="h-[7px] w-[7px] rounded-full bg-black md:h-[9px] md:w-[9px]" />
+        </div>
+      </div>
+    ),
     label: "UBICACIÓN",
     value: "Ciudad de México, CDMX",
   },
   {
-    icon: ASSETS.iconClock,
-    iconSize: "w-[15px] h-[15px] md:w-[19px] md:h-[19px]",
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="w-[15px] h-[15px] md:w-[19px] md:h-[19px]"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </svg>
+    ),
     label: "HORARIO",
     value: "12:00 PM",
   },
   {
-    icon: ASSETS.iconType,
-    iconSize: "w-[24px] h-[24px] md:w-[32px] md:h-[32px]",
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="w-[20px] h-[20px] md:w-[26px] md:h-[26px]"
+      >
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    ),
     label: "TIPO DE EVENTO",
     value: "Rueda de prensa",
   },
@@ -42,7 +77,7 @@ export default function EventSection() {
       style={{ background: "var(--bg-surface)" }}
     >
       {/* Header */}
-      <div className="px-15 md:px-20 pt-[66px] md:pt-[97px]">
+      <div className="px-15 md:px-40 pt-[66px] md:pt-[97px]">
         <div
           className="flex items-center gap-2 text-[18px] md:text-[20px] font-medium tracking-[3.6px] md:tracking-[4px] capitalize mb-4 md:mb-6"
           style={{
@@ -79,7 +114,6 @@ export default function EventSection() {
         </p>
 
         {/* Event panels */}
-        {/* Mobile: stacked | Tablet/Desktop: fluid grid */}
         <div className="grid grid-cols-1 md:[grid-template-columns:repeat(auto-fit,minmax(320px,1fr))] items-stretch gap-6 md:gap-8 xl:gap-12">
           {/* Date/details box */}
           <div
@@ -130,25 +164,13 @@ export default function EventSection() {
               </div>
 
               <div className="mt-2 md:mt-3 flex flex-col">
-                {eventData.map(({ icon, iconSize, label, value }) => (
+                {eventData.map(({ icon, label, value }) => (
                   <div
                     key={label}
                     className="flex items-start gap-4 py-3.5 md:gap-5 md:py-4"
                   >
                     <div className="mt-1 flex w-8 md:w-9 shrink-0 items-center justify-center">
-                      {label === "UBICACIÓN" ? (
-                        <div className="relative h-[17px] w-[17px] md:h-[21px] md:w-[21px]">
-                          <div className="absolute inset-0 rounded-full border border-black flex items-center justify-center">
-                            <div className="relative  h-[7px] w-[7px]  rounded-full bg-black md:h-[9px] md:w-[9px]" />
-                          </div>
-                        </div>
-                      ) : (
-                        <img
-                          src={icon}
-                          alt=""
-                          className={`${iconSize} shrink-0`}
-                        />
-                      )}
+                      {icon}
                     </div>
                     <div className="min-w-0 flex-1">
                       <p
@@ -192,7 +214,6 @@ export default function EventSection() {
         </div>
 
         {/* Gallery */}
-        {/* Desktop: 3 columns | Mobile: stacked */}
         <div className="flex flex-col md:flex-row mt-16 ">
           {[ASSETS.gallery1, ASSETS.gallery2, ASSETS.gallery3].map((src, i) => (
             <div
@@ -210,7 +231,6 @@ export default function EventSection() {
         </div>
 
         {/* Info cards */}
-        {/* Desktop: row | Mobile: stacked */}
         <div className="flex flex-col md:flex-row mt-10 md:mt-[54px]">
           {infoCards.map(({ title, description }, i) => (
             <div
