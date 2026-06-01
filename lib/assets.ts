@@ -7,4 +7,5 @@ export const ASSETS = {
   gallery3: "/gallery3.jpg",
   ctaBackground: "/ctaBackground.png",
   lbLogo: "/lbLogo.png",
+  videoLibertyWalk: "/videos/umboxing.mp4",
 };

@@ -93,7 +93,7 @@ export default function HeroSection() {
       {/* Overlay negro con opacidad */}
       <div
         className="absolute inset-0 bg-black pointer-events-none"
-        style={{ opacity: 0.55 }}
+        style={{ opacity: 0.15 }}
       />
 
       {/* ── Hero copy ── */}
@@ -191,8 +191,8 @@ export default function HeroSection() {
         })}
       </div>
 
-      {/* ── Scroll / TAP indicator ── */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-scroll-float">
+      {/* ── Scroll indicator (desktop) ── */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 animate-scroll-float">
         <span
           className="text-white/50 font-semibold"
           style={{
@@ -200,10 +200,26 @@ export default function HeroSection() {
             fontSize: "clamp(14px, 4vw, 22px)",
           }}
         >
-          <span className="md:hidden">TAP</span>
-          <span className="hidden md:inline">scroll</span>
+          scroll
         </span>
         <div className="w-0.5 h-10.5 bg-white/50" />
+      </div>
+
+      {/* ── SWIPE indicator (mobile) ── */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex md:hidden flex-col items-center gap-2">
+        <span
+          className="text-white/50 font-semibold tracking-widest"
+          style={{
+            fontFamily: "var(--font-comfortaa), sans-serif",
+            fontSize: "clamp(12px, 3.5vw, 18px)",
+          }}
+        >
+          swipe
+        </span>
+        <div className="relative flex flex-col items-center w-6 h-12">
+          <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px bg-white/25" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-2 border-white/50 bg-white/10 animate-swipe-down" />
+        </div>
       </div>
     </section>
   );

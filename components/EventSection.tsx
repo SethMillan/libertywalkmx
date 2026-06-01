@@ -57,7 +57,7 @@ const eventData: EventItem[] = [
 ];
 
 const infoCards = [
-  { title: "CAMPO MARTE", description: "Terraza Superior" },
+  { title: "AYALA PREMIUM", description: "Único Centro de Servicio Autorizado en Instalación y Venta de productos Liberty Walk en México" },
   {
     title: "AUTOS EN EXHIBICIÓN",
     description: "Los builds más icónicos de LBWK por primera vez en México",
@@ -77,139 +77,73 @@ export default function EventSection() {
       style={{ background: "var(--bg-surface)" }}
     >
       {/* Header */}
-      <div className="px-15 md:px-40 pt-[66px] md:pt-[97px]">
-        <div
-          className="flex items-center gap-2 text-[18px] md:text-[20px] font-medium tracking-[3.6px] md:tracking-[4px] capitalize mb-4 md:mb-6"
-          style={{
-            fontFamily: "var(--font-oswald), sans-serif",
-            color: "var(--text-tertiary)",
-          }}
-        >
-          <span style={{ fontFamily: "var(--font-bebas), sans-serif" }}>★</span>
-          <span>PROXIMO EVENTO</span>
-        </div>
-
-        <h2
-          className="text-[40px] md:text-[60px] font-medium leading-tight uppercase mb-6 md:mb-8 w-full md:w-[610px]"
-          style={{
-            fontFamily: "var(--font-oswald), sans-serif",
-            color: "var(--text-primary)",
-          }}
-        >
-          LIBERTY WALK
-          <br />
-          llega a México
-        </h2>
-
-        <p
-          className="text-[clamp(16px,1.8vw,20px)] not-italic leading-relaxed mb-10 md:mb-14 w-full"
-          style={{
-            fontFamily: "var(--font-barlow), sans-serif",
-            color: "var(--text-secondary)",
-          }}
-        >
-          Por primera vez en la historia, Liberty Walk presenta un evento
-          exclusivo en territorio mexicano. Una experiencia inmersiva donde la
-          cultura automotriz japonesa se encuentra con la pasión mexicana.
-        </p>
-
-        {/* Event panels */}
-        <div className="grid grid-cols-1 md:[grid-template-columns:repeat(auto-fit,minmax(320px,1fr))] items-stretch gap-6 md:gap-8 xl:gap-12">
-          {/* Date/details box */}
-          <div
-            className="relative overflow-hidden bg-white shadow-[0_18px_60px_rgba(9,9,8,0.14)]"
-            style={{ minHeight: "clamp(320px, 40vw, 500px)" }}
-          >
+      <div className="px-15 md:px-20 lg:px-20 xl:px-40 pt-[66px] md:pt-[97px]">
+        {/* Parte superior */}
+        <div className="flex flex-col md:flex-row gap-12 lg:gap-20 xl:gap-30 items-center">
+          {/* Texto de la izquierda*/}
+          <div className="flex-1 min-w-0 basis-0">
             <div
-              className="h-2 w-full"
+              className="flex items-center gap-2 text-[18px] md:text-[20px] font-medium tracking-[3.6px] md:tracking-[4px] capitalize mb-4 md:mb-6"
               style={{
-                background:
-                  "linear-gradient(90deg, rgba(9,9,8,1) 0%, rgba(9,9,8,0.7) 58%, rgba(9,9,8,0.15) 100%)",
+                fontFamily: "var(--font-oswald), sans-serif",
+                color: "var(--text-tertiary)",
               }}
-            />
-            <div className="flex h-full flex-col px-5 pb-6 pt-5 md:px-8 md:pb-8 md:pt-6 xl:px-10 xl:pb-10 xl:pt-8">
-              <div
-                className="pb-5 md:pb-6"
-                style={{ borderColor: "var(--border-default)" }}
-              >
-                <p
-                  className="text-[14px] font-medium uppercase tracking-[2.8px] md:text-[15px]"
-                  style={{
-                    fontFamily: "var(--font-oswald), sans-serif",
-                    color: "var(--text-secondary)",
-                  }}
-                >
-                  PRESENTACION EXCLUSIVA
-                </p>
-                <p
-                  className="mt-2 font-medium leading-none"
-                  style={{
-                    fontFamily: "var(--font-oswald), sans-serif",
-                    color: "var(--text-primary)",
-                    fontSize: "clamp(62px, 11vw, 90px)",
-                  }}
-                >
-                  11 MAY
-                </p>
-                <p
-                  className="font-medium uppercase leading-none"
-                  style={{
-                    fontFamily: "var(--font-oswald), sans-serif",
-                    color: "var(--text-secondary)",
-                    fontSize: "clamp(28px, 5.8vw, 52px)",
-                  }}
-                >
-                  lunes 2026
-                </p>
-              </div>
-
-              <div className="mt-2 md:mt-3 flex flex-col">
-                {eventData.map(({ icon, label, value }) => (
-                  <div
-                    key={label}
-                    className="flex items-start gap-4 py-3.5 md:gap-5 md:py-4"
-                  >
-                    <div className="mt-1 flex w-8 md:w-9 shrink-0 items-center justify-center">
-                      {icon}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p
-                        className="text-[14px] font-medium uppercase tracking-[1.8px] md:text-[15px]"
-                        style={{
-                          fontFamily: "var(--font-oswald), sans-serif",
-                          color: "var(--text-secondary)",
-                        }}
-                      >
-                        {label}
-                      </p>
-                      <p
-                        className="mt-1 block w-full border-b-[0.5px] border-black/30 pb-1 text-[16px] not-italic md:text-[17px]"
-                        style={{
-                          fontFamily: "var(--font-barlow), sans-serif",
-                          fontWeight: 400,
-                          color: "rgba(9,9,8,0.9)",
-                        }}
-                      >
-                        {value}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            >
+              <span style={{ fontFamily: "var(--font-bebas), sans-serif" }}>
+                ★
+              </span>
+              <span>MÁS SOBRE NOSOTROS</span>
             </div>
-          </div>
 
-          {/* Event photo */}
-          <div
-            className="relative overflow-hidden"
-            style={{ minHeight: "clamp(320px, 42vw, 520px)" }}
-          >
-            <img
-              src={ASSETS.eventPhoto}
-              alt="Evento Liberty Walk México"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
+            <h2
+              className="text-[40px] md:text-[60px] font-medium leading-tight uppercase mb-6 md:mb-8 w-full"
+              style={{
+                fontFamily: "var(--font-oswald), sans-serif",
+                color: "var(--text-primary)",
+              }}
+            >
+              LIBERTY WALK
+              <br />
+              llega a México
+            </h2>
+
+            <p
+              className="text-[clamp(16px,1.8vw,20px)] not-italic leading-relaxed mb-10 md:mb-14 w-full"
+              style={{
+                fontFamily: "var(--font-barlow), sans-serif",
+                color: "var(--text-secondary)",
+              }}
+            >
+              Por primera vez, los exclusivos body kits de Liberty Walk llegan a
+              México, marcando un antes y después para la cultura automotriz en
+              nuestro país.
+              <br />
+              <br />
+              México se suma oficialmente a la familia Liberty Walk,
+              introduciendo al país una de las marcas más influyentes y
+              reconocidas del mundo en personalización de alto nivel.
+            </p>
+            {/* LINEA DECORATIVA */}
+            <div className="h-[6px] w-[20%] bg-black/70 mb-8" />
+          </div>
+          {/* Video  */}
+          <div className="flex-1 min-w-0 basis-0 flex flex-col md:flex-row gap-6 md:gap-12">
+            {/* Video Card */}
+            <div
+              className="relative overflow-hidden w-full"
+              style={{ height: "555px" }}
+            >
+              <video
+                src={ASSETS.videoLibertyWalk}
+                autoPlay
+                loop
+                muted
+                controls={true}
+                className="w-full object-cover"
+                style={{ height: "calc(100% + 80px)", marginTop: "-40px" }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
+            </div>
           </div>
         </div>
 

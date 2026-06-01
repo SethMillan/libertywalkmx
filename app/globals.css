@@ -44,5 +44,31 @@ body {
 }
 
 .animate-scroll-float {
-  animation: scroll-float 2.4s ease-in-out infinite;
+  animation: scroll-float 1.4s ease-in-out infinite;
+}
+
+@keyframes swipe-down {
+  0% {
+    transform: translateY(0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.65;
+  }
+  70% {
+    transform: translateY(-28px);
+    opacity: 0.65;
+  }
+  90% {
+    transform: translateY(-32px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0px);
+    opacity: 0;
+  }
+}
+
+.animate-swipe-down {
+  animation: swipe-down 1.8s ease-in-out infinite;
 }
