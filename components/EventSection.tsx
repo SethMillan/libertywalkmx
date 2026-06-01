@@ -96,7 +96,7 @@ export default function EventSection() {
             color: "var(--text-primary)",
           }}
         >
-          LIBETY WALK
+          LIBERTY WALK
           <br />
           llega a México
         </h2>
