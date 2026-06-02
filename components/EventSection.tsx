@@ -1,4 +1,6 @@
-import { ReactNode } from "react";
+"use client";
+
+import { ReactNode, useEffect, useRef } from "react";
 import { ASSETS } from "@/lib/assets";
 
 interface EventItem {
@@ -70,6 +72,31 @@ const infoCards = [
 ];
 
 export default function EventSection() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {
+            // Si el navegador bloquea audio, reproducir silenciado
+            video.muted = true;
+            video.play();
+          });
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
       id="evento"
@@ -134,15 +161,15 @@ export default function EventSection() {
               style={{ height: "555px" }}
             >
               <video
+                ref={videoRef}
                 src={ASSETS.videoLibertyWalk}
-                autoPlay
                 loop
-                muted
-                controls={true}
+                controls
+                playsInline
                 className="w-full object-cover"
                 style={{ height: "calc(100% + 80px)", marginTop: "-40px" }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent pointer-events-none" />
             </div>
           </div>
         </div>
