@@ -93,7 +93,7 @@ export default function HeroSection() {
       {/* Overlay negro con opacidad */}
       <div
         className="absolute inset-0 bg-black pointer-events-none"
-        style={{ opacity: 0.15 }}
+        style={{ opacity: 0.10 }}
       />
 
       {/* ── Hero copy ── */}
