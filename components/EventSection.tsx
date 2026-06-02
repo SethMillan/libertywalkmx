@@ -158,7 +158,7 @@ export default function EventSection() {
             {/* Video Card */}
             <div
               className="relative overflow-hidden w-full"
-              style={{ height: "555px" }}
+              style={{ height: "565px" }}
             >
               <video
                 ref={videoRef}
@@ -167,7 +167,7 @@ export default function EventSection() {
                 controls
                 playsInline
                 className="w-full object-cover"
-                style={{ height: "calc(100% + 80px)", marginTop: "-40px" }}
+                style={{ height: "calc(100% + 45px)", marginTop: "-40px" }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent pointer-events-none" />
             </div>
