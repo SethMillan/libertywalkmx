@@ -141,7 +141,7 @@ export default function EventSection() {
                 color: "var(--text-secondary)",
               }}
             >
-              Por primera vez, los exclusivos body kits de Liberty Walk llegan a
+              Por primera vez, los exclusivos body kits de Liberty Walk llegan oficialmente a
               México, marcando un antes y después para la cultura automotriz en
               nuestro país.
               <br />
