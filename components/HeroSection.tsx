@@ -125,8 +125,13 @@ export default function HeroSection() {
           gap: "clamp(12px, 1.5vw, 32px)",
         }}
       >
-        <div style={{ fontSize: "clamp(36px, 4.7vw, 60px)" }}>LIBERTY WALK</div>
-        <div style={{ fontSize: "clamp(60px, 9.4vw, 120px)" }}>MÉXICO</div>
+        <h1
+          className="flex flex-col font-medium leading-none"
+          style={{ gap: "clamp(12px, 1.5vw, 32px)" }}
+        >
+          <span style={{ fontSize: "clamp(36px, 4.7vw, 60px)" }}>LIBERTY WALK </span>
+          <span style={{ fontSize: "clamp(60px, 9.4vw, 120px)" }}>MÉXICO</span>
+        </h1>
         {/* Description */}
         <p
           className=" text-white/80 not-italic leading-relaxed "
