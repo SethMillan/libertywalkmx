@@ -1,6 +1,6 @@
 const brands = [
-  "Nissan", "BMW", "Mercedes", "Lamborghini", "Dodge",
-  "Mazda", "McLaren", "Toyota", "Audi", "Ferrari", "Porsche",
+  "Nissan", "Lamborghini", "Ferrari", "McLaren", "BMW", "Porsche",
+  "Toyota", "Dodge", "Audi", "Mercedes", "Mazda",
 ];
 
 export default function BrandsCarousel() {

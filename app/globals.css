@@ -20,6 +20,15 @@ body {
   overflow-x: hidden;
 }
 
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -71,4 +80,67 @@ body {
 
 .animate-swipe-down {
   animation: swipe-down 1.8s ease-in-out infinite;
+}
+
+/* Botón "Cotizar este kit completo" (OrderBuilder) — mismo hover que el
+   diseño de referencia (flechas apiladas que se separan + pulso de color al
+   pasar el mouse), con la paleta del sitio: negro en vez de morado, rojo en
+   vez de amarillo. */
+.quote-cta {
+  transform: skewX(-15deg);
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.85);
+  transition: box-shadow 0.5s;
+}
+
+.quote-cta:hover {
+  box-shadow: 10px 10px 0 #c0392b;
+}
+
+.quote-cta__label,
+.quote-cta__icon {
+  transform: skewX(15deg);
+}
+
+.quote-cta__icon {
+  transition: margin 0.5s;
+}
+
+.quote-cta:hover .quote-cta__icon {
+  margin-right: 45px;
+}
+
+.quote-cta path.one {
+  transition: transform 0.4s;
+  transform: translateX(-60%);
+}
+
+.quote-cta path.two {
+  transition: transform 0.5s;
+  transform: translateX(-30%);
+}
+
+.quote-cta:hover path.three {
+  animation: quote-cta-pulse 1s infinite 0.2s;
+}
+
+.quote-cta:hover path.one {
+  transform: translateX(0%);
+  animation: quote-cta-pulse 1s infinite 0.6s;
+}
+
+.quote-cta:hover path.two {
+  transform: translateX(0%);
+  animation: quote-cta-pulse 1s infinite 0.4s;
+}
+
+@keyframes quote-cta-pulse {
+  0% {
+    fill: #ffffff;
+  }
+  50% {
+    fill: #c0392b;
+  }
+  100% {
+    fill: #ffffff;
+  }
 }

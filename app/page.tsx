@@ -1,29 +1,28 @@
 import HeroSection from "@/components/HeroSection";
-import NavBar from "@/components/NavBar";
 import BrandsCarousel from "@/components/BrandsCarousel";
 import StatsSection from "@/components/StatsSection";
 import AboutSection from "@/components/AboutSection";
 import EventSection from "@/components/EventSection";
-import MarcasSection from "@/components/MarcasSection";
+import CatalogSection from "@/components/CatalogSection";
 import CTASection from "@/components/CTASection";
 import ContactSection from "@/components/ContactSection";
-import Footer from "@/components/Footer";
+
+// El catálogo de body kits (CatalogSection) lee de Supabase; sin esto la
+// página quedaría estática con los datos del último build. Se revalida en
+// segundo plano cada hora, sin necesitar un redeploy tras cada re-scrape.
+export const revalidate = 3600;
 
 export default function Home() {
   return (
     <>
-      <NavBar />
-      <main className="flex flex-col w-full">
-        <HeroSection />
-        <BrandsCarousel />
-        <StatsSection />
-        <AboutSection />
-        <EventSection />
-        <MarcasSection />
-        <CTASection />
-        <ContactSection />
-        <Footer />
-      </main>
+      <HeroSection />
+      <BrandsCarousel />
+      <StatsSection />
+      <AboutSection />
+      <EventSection />
+      <CatalogSection />
+      <CTASection />
+      <ContactSection />
     </>
   );
 }

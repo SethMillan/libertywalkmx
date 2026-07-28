@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { ASSETS } from "@/lib/assets";
 import { slowScrollToHash } from "@/lib/scroll";
 
@@ -8,11 +10,14 @@ const NAV_LINKS = [
   { label: "INICIO", href: "#inicio" },
   { label: "NOSOTROS", href: "#nosotros" },
   { label: "EVENTO", href: "#evento" },
-  { label: "BODY KITS", href: "#body-kits" },
+  { label: "BODY KITS", href: "/body-kits" },
   { label: "CONTACTO", href: "#contacto" },
 ];
 
 export default function NavBar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const isHome = pathname === "/";
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -33,7 +38,11 @@ export default function NavBar() {
     (href: string) =>
     (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
       e.preventDefault();
-      slowScrollToHash(href);
+      if (isHome) {
+        slowScrollToHash(href);
+      } else {
+        router.push(`/${href}`);
+      }
       setMenuOpen(false);
     };
 
@@ -41,14 +50,14 @@ export default function NavBar() {
     <>
       <nav
         className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 md:px-14 py-2.5 md:py-3 transition-all duration-300 ${
-          isScrolled
+          isScrolled || !isHome
             ? "bg-black/90 backdrop-blur-sm shadow-lg"
             : "bg-transparent"
         }`}
       >
         <button
           onClick={handleNavigate("#inicio")}
-          className="flex items-center gap-2 md:gap-3"
+          className="flex cursor-pointer items-center gap-2 md:gap-3"
           aria-label="Ir al inicio"
         >
           <div className="w-[52px] h-[52px] md:w-[68px] md:h-[68px] shrink-0">
@@ -73,13 +82,19 @@ export default function NavBar() {
         >
           {NAV_LINKS.map(({ label, href }) => (
             <li key={label}>
-              <a
-                href={href}
-                onClick={handleNavigate(href)}
-                className="hover:text-white transition-colors"
-              >
-                {label}
-              </a>
+              {href.startsWith("#") ? (
+                <a
+                  href={href}
+                  onClick={handleNavigate(href)}
+                  className="hover:text-white transition-colors"
+                >
+                  {label}
+                </a>
+              ) : (
+                <Link href={href} className="hover:text-white transition-colors">
+                  {label}
+                </Link>
+              )}
             </li>
           ))}
         </ul>
@@ -106,17 +121,29 @@ export default function NavBar() {
           >
             x
           </button>
-          {NAV_LINKS.map(({ label, href }) => (
-            <a
-              key={label}
-              href={href}
-              className="text-white text-[32px] font-medium tracking-wider"
-              style={{ fontFamily: "var(--font-oswald), sans-serif" }}
-              onClick={handleNavigate(href)}
-            >
-              {label}
-            </a>
-          ))}
+          {NAV_LINKS.map(({ label, href }) =>
+            href.startsWith("#") ? (
+              <a
+                key={label}
+                href={href}
+                className="text-white text-[32px] font-medium tracking-wider"
+                style={{ fontFamily: "var(--font-oswald), sans-serif" }}
+                onClick={handleNavigate(href)}
+              >
+                {label}
+              </a>
+            ) : (
+              <Link
+                key={label}
+                href={href}
+                className="text-white text-[32px] font-medium tracking-wider"
+                style={{ fontFamily: "var(--font-oswald), sans-serif" }}
+                onClick={() => setMenuOpen(false)}
+              >
+                {label}
+              </Link>
+            ),
+          )}
         </div>
       )}
     </>

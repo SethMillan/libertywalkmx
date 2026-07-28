@@ -59,15 +59,20 @@ const eventData: EventItem[] = [
 ];
 
 const infoCards = [
-  { title: "AYALA PREMIUM", description: "Único Centro de Servicio Autorizado en Instalación y Venta de productos Liberty Walk en México" },
   {
-    title: "AUTOS EN EXHIBICIÓN",
-    description: "Los builds más icónicos de LBWK por primera vez en México",
+    title: "BODY KITS",
+    description:
+      "Body kits completos de fibra que transforman la silueta de tu vehículo. FRP, CFRP y DRY CARBON disponibles.",
   },
   {
-    title: "EXPERIENCIA INMERSIVA",
+    title: "INSTALACIÓN PROFESIONAL",
     description:
-      "Conoce de cerca cada detalle del proceso de transformación Liberty Walk",
+      "Centro de servicio oficial certificado Ayala Premium. Garantía de calidad en cada proyecto.",
+  },
+  {
+    title: "ENVÍO DIRECTO DE JAPÓN",
+    description:
+      "Importación directa desde Liberty Walk Japón en Nagoya. Piezas 100% originales.",
   },
 ];
 
