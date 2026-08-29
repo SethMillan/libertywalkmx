@@ -188,6 +188,80 @@ export async function getFeaturedKits(limit = 6): Promise<CatalogKit[]> {
   );
 }
 
+// Home: selección curada a mano. La sección "BODY KITS" del home muestra
+// exactamente estos kits, en este orden. Se emparejan por `kit_url` (columna
+// UNIQUE, el permalink de libertywalk.co.jp) porque es el único identificador
+// estable: `name` se sobrescribe en cada re-scrape y los `id` SERIAL no siguen
+// un orden garantizado. Un kit que no exista o esté agotado simplemente no
+// aparece — la grilla es responsiva y no asume una cantidad fija.
+const CURATED_HOME_KIT_URLS = [
+  "https://libertywalk.co.jp/bodykit/mazda-roadster-nd/",
+  "https://libertywalk.co.jp/bodykit/lb-works-audi-r8/",
+  "https://libertywalk.co.jp/bodykit/nissan-fairlady-z-rz34/",
+  "https://libertywalk.co.jp/bodykit/lb-works-toyota-supra-a90/",
+  "https://libertywalk.co.jp/bodykit/mclaren-720s/",
+  "https://libertywalk.co.jp/bodykit/lb%e2%98%85nation-toyota-86-subaru-brz/",
+  "https://libertywalk.co.jp/bodykit/lamborghini-huracan/",
+  "https://libertywalk.co.jp/bodykit/lb-works-porsche-997/",
+  "https://libertywalk.co.jp/bodykit/lb-works-honda-nsx-nc1/",
+];
+
+export async function getCuratedHomeKits(): Promise<CatalogKit[]> {
+  const { data: kitsData, error: kitsErr } = await supabase
+    .from("kits")
+    .select(
+      "id, name, kit_url, brand_id, product_line_id, secondary_line_id, is_new, image_url",
+    )
+    .in("kit_url", CURATED_HOME_KIT_URLS);
+
+  if (kitsErr) throw new Error(`getCuratedHomeKits: ${kitsErr.message}`);
+
+  const kitIds = (kitsData ?? []).map((k) => k.id);
+
+  const [{ data: brandsData }, { data: linesData }, { data: badgesData }, { data: completeItemsData }] =
+    await Promise.all([
+      supabase.from("brands").select("id, name"),
+      supabase.from("product_lines").select("id, name"),
+      kitIds.length
+        ? supabase
+            .from("kit_badges")
+            .select("kit_id, label, detail")
+            .in("kit_id", kitIds)
+        : Promise.resolve({ data: [] }),
+      kitIds.length
+        ? supabase
+            .from("kit_items")
+            .select("kit_id, price_usd")
+            .eq("item_type", "COMPLETE")
+            .not("price_usd", "is", null)
+            .in("kit_id", kitIds)
+        : Promise.resolve({ data: [] }),
+    ]);
+
+  const soldOutKitIds = new Set(
+    (badgesData ?? [])
+      .filter((b) => isSoldOutBadge(b.detail))
+      .map((b) => b.kit_id),
+  );
+
+  const orderIndex = (url: string) => {
+    const i = CURATED_HOME_KIT_URLS.indexOf(url);
+    return i === -1 ? Number.MAX_SAFE_INTEGER : i;
+  };
+
+  const orderedKits = (kitsData ?? [])
+    .filter((k) => !soldOutKitIds.has(k.id))
+    .sort((a, b) => orderIndex(a.kit_url) - orderIndex(b.kit_url));
+
+  return mapCatalogKits(
+    orderedKits,
+    brandsData ?? [],
+    linesData ?? [],
+    badgesData ?? [],
+    completeItemsData ?? [],
+  );
+}
+
 export interface KitItemVariant {
   material: string | null;
   priceUsd: number | null;

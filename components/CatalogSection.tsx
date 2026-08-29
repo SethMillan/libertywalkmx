@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { getFeaturedKits } from "@/lib/catalog";
+import { getCuratedHomeKits } from "@/lib/catalog";
 import KitCard from "@/components/KitCard";
 
 export default async function CatalogSection() {
-  const kits = await getFeaturedKits(6);
+  const kits = await getCuratedHomeKits();
 
   return (
     <section
