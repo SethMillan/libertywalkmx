@@ -6,8 +6,8 @@ const DC_BLACK = "#101010";
 // Todo el texto de la card usa el mismo negro (antes el renglón/dirección
 // tenía un azul marino distinto al de los nombres/título).
 const DC_TEXT = DC_BLACK;
-const DC_WA = "#25d366";
 const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/6RNJxb57wUe6D5iZ7";
+const CONTACT_EMAIL = "contacto@libertywalk.com.mx";
 
 const poppins: React.CSSProperties = { fontFamily: "var(--font-poppins), sans-serif" };
 
@@ -27,19 +27,11 @@ function PhoneIcon() {
   );
 }
 
-function EnvelopeIcon() {
+function EnvelopeIcon({ className = "h-[15px] w-[15px]" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="h-[15px] w-[15px]">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={className}>
       <rect x="3" y="5" width="18" height="14" rx="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <path d="m4 6.5 8 6.5 8-6.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function WhatsappIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="h-[19px] w-[19px]">
-      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.87 9.87 0 0 0 4.74 1.21h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm5.8 14.03c-.24.68-1.4 1.3-1.93 1.34-.5.05-1.02.24-3.4-.71-2.88-1.15-4.7-4.1-4.84-4.29-.14-.19-1.16-1.54-1.16-2.94 0-1.4.73-2.09.99-2.37.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.42-.07.65.5.24.58.81 2 .88 2.14.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.14-.28.29-.12.57.16.29.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.24 1.38.28.14.44.12.61-.07.16-.19.7-.82.89-1.1.19-.29.38-.24.63-.14.26.09 1.65.78 1.93.92.28.14.47.21.54.33.07.12.07.69-.17 1.37Z" />
     </svg>
   );
 }
@@ -85,7 +77,14 @@ function DcRow({
   );
 }
 
-export default function LocalDealerInfo() {
+// Todo el contacto del sitio es por correo: el botón abre un correo a
+// contacto@ con el kit ya puesto en el asunto.
+function quoteMailto(kitName?: string) {
+  const subject = kitName ? `Cotización ${kitName}` : "Cotización Liberty Walk México";
+  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`;
+}
+
+export default function LocalDealerInfo({ kitName }: { kitName?: string }) {
   return (
     <div className="mx-auto mt-14 max-w-[480px] md:mt-20" style={poppins}>
       <div
@@ -137,25 +136,22 @@ export default function LocalDealerInfo() {
         </DcRow>
 
         <a
-          href="https://wa.me/529841698148"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group relative isolate mt-[22px] flex w-full items-center justify-center gap-2.5 overflow-hidden border-[1.5px] border-[#101010] px-[18px] py-[13px] no-underline transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-[#128c4a] hover:shadow-[0_10px_22px_-10px_rgba(37,211,102,0.55)]"
-          style={{ background: DC_BLACK, color: "#fff" }}
+          href={quoteMailto(kitName)}
+          className="group relative isolate mt-[22px] flex w-full items-center justify-center gap-2.5 overflow-hidden border-[1.5px] border-[#101010] px-[18px] py-[13px] text-white no-underline transition-all duration-300 ease-out hover:-translate-y-0.5 hover:text-[#101010] hover:shadow-[0_10px_22px_-10px_rgba(0,0,0,0.45)]"
+          style={{ background: DC_BLACK }}
         >
           <span
             aria-hidden="true"
-            className="absolute inset-0 z-0 origin-left scale-x-0 transition-transform duration-[350ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-x-100"
-            style={{ background: DC_WA }}
+            className="absolute inset-0 z-0 origin-left scale-x-0 bg-white transition-transform duration-[350ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-x-100"
           />
           <span className="relative z-[1] flex transition-transform duration-[350ms] ease-out group-hover:-rotate-6 group-hover:scale-[1.15]">
-            <WhatsappIcon />
+            <EnvelopeIcon className="h-[19px] w-[19px]" />
           </span>
           <span
             className="relative z-[1] text-[15px] font-bold uppercase tracking-[0.02em]"
             style={poppins}
           >
-            WhatsApp
+            Enviar correo
           </span>
         </a>
       </div>

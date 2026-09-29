@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { formatUsdReference } from "@/lib/format";
+import {
+  cleanLine,
+  escapeHtml,
+  isValidEmail,
+  safeHttpUrl,
+} from "@/lib/sanitize";
 
 const port = Number(process.env.SMTP_PORT) || 465;
 
@@ -21,17 +27,38 @@ interface OrderItem {
   priceUsd: number | null;
 }
 
+// El carrito viene del navegador: se reconstruye campo por campo para que al
+// correo solo lleguen textos acotados y precios numéricos.
+function parseItems(value: unknown): OrderItem[] {
+  if (!Array.isArray(value)) return [];
+  return value.slice(0, 100).flatMap((raw): OrderItem[] => {
+    if (!raw || typeof raw !== "object") return [];
+    const it = raw as Record<string, unknown>;
+    const itemName = cleanLine(it.itemName, 200);
+    if (!itemName) return [];
+    return [
+      {
+        itemType: it.itemType === "COMPLETE" ? "COMPLETE" : "SINGLE_PART",
+        itemName,
+        material: cleanLine(it.material, 80) || null,
+        priceUsd:
+          typeof it.priceUsd === "number" && Number.isFinite(it.priceUsd)
+            ? it.priceUsd
+            : null,
+      },
+    ];
+  });
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { nombre, email, telefono, kitName, kitUrl, items } =
-      (await request.json()) as {
-        nombre: string;
-        email: string;
-        telefono?: string;
-        kitName: string;
-        kitUrl: string;
-        items: OrderItem[];
-      };
+    const body = await request.json().catch(() => null);
+    const nombre = cleanLine(body?.nombre, 120);
+    const email = cleanLine(body?.email, 254);
+    const telefono = cleanLine(body?.telefono, 40);
+    const kitName = cleanLine(body?.kitName, 200);
+    const kitUrl = safeHttpUrl(body?.kitUrl);
+    const items = parseItems(body?.items);
 
     if (!nombre || !email) {
       return NextResponse.json(
@@ -39,7 +66,13 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    if (!Array.isArray(items) || items.length === 0) {
+    if (!isValidEmail(email)) {
+      return NextResponse.json(
+        { error: "Ingresa un email válido" },
+        { status: 400 },
+      );
+    }
+    if (items.length === 0) {
       return NextResponse.json(
         { error: "Selecciona al menos una pieza" },
         { status: 400 },
@@ -54,6 +87,15 @@ export async function POST(request: NextRequest) {
       minute: "2-digit",
     });
 
+    // Versiones escapadas: son las únicas que se insertan en el HTML.
+    const safe = {
+      nombre: escapeHtml(nombre),
+      email: escapeHtml(email),
+      telefono: escapeHtml(telefono),
+      kitName: escapeHtml(kitName),
+      kitUrl: kitUrl ? escapeHtml(kitUrl) : null,
+    };
+
     const subtotal = items.reduce((s, i) => s + (i.priceUsd ?? 0), 0);
     const pendingCount = items.filter((i) => i.priceUsd == null).length;
 
@@ -62,10 +104,10 @@ export async function POST(request: NextRequest) {
         (it) => `
               <tr>
                 <td style="padding:10px 0;border-bottom:1px solid #f0f0ee;vertical-align:top;">
-                  <p style="margin:0;color:#0c0d0d;font-size:14px;font-weight:600;">${it.itemName}</p>
+                  <p style="margin:0;color:#0c0d0d;font-size:14px;font-weight:600;">${escapeHtml(it.itemName)}</p>
                   <p style="margin:2px 0 0;color:#999;font-size:11px;letter-spacing:1px;text-transform:uppercase;">${
                     it.itemType === "COMPLETE" ? "Kit completo" : "Pieza individual"
-                  } · ${it.material ?? "—"}</p>
+                  } · ${escapeHtml(it.material ?? "—")}</p>
                 </td>
                 <td style="padding:10px 0;border-bottom:1px solid #f0f0ee;text-align:right;vertical-align:top;white-space:nowrap;">
                   <p style="margin:0;color:#0c0d0d;font-size:14px;font-weight:600;">${
@@ -125,7 +167,7 @@ export async function POST(request: NextRequest) {
                   <p style="margin:0;color:#999;font-size:10px;letter-spacing:2px;text-transform:uppercase;">Nombre</p>
                 </td>
                 <td style="padding:10px 0 10px 16px;border-bottom:1px solid #f0f0ee;vertical-align:top;">
-                  <p style="margin:0;color:#0c0d0d;font-size:15px;font-weight:600;">${nombre}</p>
+                  <p style="margin:0;color:#0c0d0d;font-size:15px;font-weight:600;">${safe.nombre}</p>
                 </td>
               </tr>
               <tr>
@@ -133,7 +175,7 @@ export async function POST(request: NextRequest) {
                   <p style="margin:0;color:#999;font-size:10px;letter-spacing:2px;text-transform:uppercase;">Email</p>
                 </td>
                 <td style="padding:10px 0 10px 16px;border-bottom:1px solid #f0f0ee;vertical-align:top;">
-                  <a href="mailto:${email}" style="color:#090908;font-size:15px;text-decoration:underline;">${email}</a>
+                  <a href="mailto:${safe.email}" style="color:#090908;font-size:15px;text-decoration:underline;">${safe.email}</a>
                 </td>
               </tr>
               <tr>
@@ -141,15 +183,19 @@ export async function POST(request: NextRequest) {
                   <p style="margin:0;color:#999;font-size:10px;letter-spacing:2px;text-transform:uppercase;">Teléfono</p>
                 </td>
                 <td style="padding:10px 0 10px 16px;border-bottom:1px solid #f0f0ee;vertical-align:top;">
-                  <p style="margin:0;color:#0c0d0d;font-size:15px;">${telefono || "—"}</p>
+                  <p style="margin:0;color:#0c0d0d;font-size:15px;">${safe.telefono || "—"}</p>
                 </td>
               </tr>
             </table>
 
             <!-- Kit -->
             <p style="margin:32px 0 20px;color:#0c0d0d;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;border-bottom:1px solid #e8e8e6;padding-bottom:10px;">Kit</p>
-            <p style="margin:0 0 4px;color:#0c0d0d;font-size:16px;font-weight:600;">${kitName}</p>
-            <a href="${kitUrl}" style="color:#090908;font-size:13px;text-decoration:underline;">${kitUrl}</a>
+            <p style="margin:0 0 4px;color:#0c0d0d;font-size:16px;font-weight:600;">${safe.kitName}</p>
+            ${
+              kitUrl
+                ? `<a href="${safe.kitUrl}" style="color:#090908;font-size:13px;text-decoration:underline;">${safe.kitUrl}</a>`
+                : ""
+            }
 
             <!-- Piezas -->
             <p style="margin:32px 0 20px;color:#0c0d0d;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;border-bottom:1px solid #e8e8e6;padding-bottom:10px;">Piezas solicitadas</p>
@@ -180,7 +226,7 @@ export async function POST(request: NextRequest) {
             <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;">
               <tr>
                 <td align="center">
-                  <a href="mailto:${email}" style="display:inline-block;background:#0c0d0d;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none;padding:14px 32px;">
+                  <a href="mailto:${safe.email}" style="display:inline-block;background:#0c0d0d;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none;padding:14px 32px;">
                     RESPONDER AL CLIENTE →
                   </a>
                 </td>
@@ -217,10 +263,7 @@ export async function POST(request: NextRequest) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[order-request/route] sendMail error:", message);
     return NextResponse.json(
-      {
-        error: "Error al enviar el correo. Intenta de nuevo.",
-        debug: message,
-      },
+      { error: "Error al enviar el correo. Intenta de nuevo." },
       { status: 500 },
     );
   }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { cleanLine, cleanMultiline, escapeHtml, isValidEmail } from "@/lib/sanitize";
 
 const port = Number(process.env.SMTP_PORT) || 465;
 
@@ -15,8 +16,12 @@ const transporter = nodemailer.createTransport({
 
 export async function POST(request: NextRequest) {
   try {
-    const { nombre, email, telefono, vehiculo, proyecto } =
-      await request.json();
+    const body = await request.json().catch(() => null);
+    const nombre = cleanLine(body?.nombre, 120);
+    const email = cleanLine(body?.email, 254);
+    const telefono = cleanLine(body?.telefono, 40);
+    const vehiculo = cleanLine(body?.vehiculo, 160);
+    const proyecto = cleanMultiline(body?.proyecto, 5000);
 
     if (!nombre || !email) {
       return NextResponse.json(
@@ -24,6 +29,21 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+    if (!isValidEmail(email)) {
+      return NextResponse.json(
+        { error: "Ingresa un email válido" },
+        { status: 400 },
+      );
+    }
+
+    // Versiones escapadas: son las únicas que se insertan en el HTML.
+    const safe = {
+      nombre: escapeHtml(nombre),
+      email: escapeHtml(email),
+      telefono: escapeHtml(telefono),
+      vehiculo: escapeHtml(vehiculo),
+      proyecto: escapeHtml(proyecto),
+    };
 
     const fecha = new Date().toLocaleDateString("es-MX", {
       day: "numeric",
@@ -82,7 +102,7 @@ export async function POST(request: NextRequest) {
                   <p style="margin:0;color:#999;font-size:10px;letter-spacing:2px;text-transform:uppercase;">Nombre</p>
                 </td>
                 <td style="padding:10px 0 10px 16px;border-bottom:1px solid #f0f0ee;vertical-align:top;">
-                  <p style="margin:0;color:#0c0d0d;font-size:15px;font-weight:600;">${nombre}</p>
+                  <p style="margin:0;color:#0c0d0d;font-size:15px;font-weight:600;">${safe.nombre}</p>
                 </td>
               </tr>
               <tr>
@@ -90,7 +110,7 @@ export async function POST(request: NextRequest) {
                   <p style="margin:0;color:#999;font-size:10px;letter-spacing:2px;text-transform:uppercase;">Email</p>
                 </td>
                 <td style="padding:10px 0 10px 16px;border-bottom:1px solid #f0f0ee;vertical-align:top;">
-                  <a href="mailto:${email}" style="color:#090908;font-size:15px;text-decoration:underline;">${email}</a>
+                  <a href="mailto:${safe.email}" style="color:#090908;font-size:15px;text-decoration:underline;">${safe.email}</a>
                 </td>
               </tr>
               <tr>
@@ -98,7 +118,7 @@ export async function POST(request: NextRequest) {
                   <p style="margin:0;color:#999;font-size:10px;letter-spacing:2px;text-transform:uppercase;">Teléfono</p>
                 </td>
                 <td style="padding:10px 0 10px 16px;border-bottom:1px solid #f0f0ee;vertical-align:top;">
-                  <p style="margin:0;color:#0c0d0d;font-size:15px;">${telefono || "—"}</p>
+                  <p style="margin:0;color:#0c0d0d;font-size:15px;">${safe.telefono || "—"}</p>
                 </td>
               </tr>
             </table>
@@ -112,7 +132,7 @@ export async function POST(request: NextRequest) {
                   <p style="margin:0;color:#999;font-size:10px;letter-spacing:2px;text-transform:uppercase;">Vehículo</p>
                 </td>
                 <td style="padding:10px 0 10px 16px;border-bottom:1px solid #f0f0ee;vertical-align:top;">
-                  <p style="margin:0;color:#0c0d0d;font-size:15px;font-weight:600;">${vehiculo || "—"}</p>
+                  <p style="margin:0;color:#0c0d0d;font-size:15px;font-weight:600;">${safe.vehiculo || "—"}</p>
                 </td>
               </tr>
               <tr>
@@ -120,7 +140,7 @@ export async function POST(request: NextRequest) {
                   <p style="margin:0;color:#999;font-size:10px;letter-spacing:2px;text-transform:uppercase;">Proyecto</p>
                 </td>
                 <td style="padding:10px 0 10px 16px;vertical-align:top;">
-                  <p style="margin:0;color:#0c0d0d;font-size:15px;line-height:1.6;white-space:pre-wrap;">${proyecto || "—"}</p>
+                  <p style="margin:0;color:#0c0d0d;font-size:15px;line-height:1.6;white-space:pre-wrap;">${safe.proyecto || "—"}</p>
                 </td>
               </tr>
             </table>
@@ -129,7 +149,7 @@ export async function POST(request: NextRequest) {
             <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:32px;">
               <tr>
                 <td align="center">
-                  <a href="mailto:${email}" style="display:inline-block;background:#0c0d0d;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none;padding:14px 32px;">
+                  <a href="mailto:${safe.email}" style="display:inline-block;background:#0c0d0d;color:#ffffff;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none;padding:14px 32px;">
                     RESPONDER AL CLIENTE →
                   </a>
                 </td>
@@ -166,10 +186,7 @@ export async function POST(request: NextRequest) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("[contact/route] sendMail error:", message);
     return NextResponse.json(
-      {
-        error: "Error al enviar el correo. Intenta de nuevo.",
-        debug: message,
-      },
+      { error: "Error al enviar el correo. Intenta de nuevo." },
       { status: 500 },
     );
   }

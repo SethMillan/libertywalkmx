@@ -176,7 +176,7 @@ export default async function KitDetailPage({
         singleParts={kit.singleParts}
       />
 
-      <LocalDealerInfo />
+      <LocalDealerInfo kitName={kit.name} />
     </section>
   );
 }

@@ -5,8 +5,6 @@ import Link from "next/link";
 import type { KitItemGroup, KitItemVariant } from "@/lib/catalog";
 import { formatUsdReference } from "@/lib/format";
 
-const WHATSAPP_NUMBER = "5214501097563";
-
 type ItemType = "COMPLETE" | "SINGLE_PART";
 
 interface SelectedItem {
@@ -242,33 +240,6 @@ export default function OrderBuilder({
   const items = Array.from(selected.values());
   const subtotal = items.reduce((s, i) => s + (i.priceUsd ?? 0), 0);
   const pendingCount = items.filter((i) => i.priceUsd == null).length;
-
-  const buildWhatsAppMessage = () => {
-    const lines = items.map(
-      (i) =>
-        `• ${i.itemName} (${i.material ?? "—"}) — ${
-          i.priceUsd != null ? formatUsdReference(i.priceUsd) : "Precio a cotizar"
-        }`,
-    );
-    return [
-      "Hola, me interesa cotizar el siguiente kit de Liberty Walk México:",
-      "",
-      `Kit: ${kitName}`,
-      "",
-      ...lines,
-      "",
-      `Enlace: ${window.location.href}`,
-    ].join("\n");
-  };
-
-  const handleWhatsApp = () => {
-    const text = buildWhatsAppMessage();
-    window.open(
-      `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`,
-      "_blank",
-      "noopener,noreferrer",
-    );
-  };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setEmailForm((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -575,35 +546,21 @@ export default function OrderBuilder({
                 {pendingCount > 0 ? ` · ${pendingCount} a cotizar` : ""}
               </p>
             </button>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleWhatsApp}
-                className="h-11 px-4 text-[13px] font-medium uppercase transition-colors md:px-6"
-                style={{
-                  fontFamily: "var(--font-oswald), sans-serif",
-                  background: "#25D366",
-                  color: "#0c0d0d",
-                }}
-              >
-                WhatsApp
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setExpanded(true);
-                  setShowEmailForm(true);
-                }}
-                className="h-11 px-4 text-[13px] font-medium uppercase transition-colors md:px-6"
-                style={{
-                  fontFamily: "var(--font-oswald), sans-serif",
-                  background: "var(--text-primary)",
-                  color: "var(--text-primary-w)",
-                }}
-              >
-                Correo
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setExpanded(true);
+                setShowEmailForm(true);
+              }}
+              className="h-11 shrink-0 px-4 text-[13px] font-medium uppercase transition-colors md:px-6"
+              style={{
+                fontFamily: "var(--font-oswald), sans-serif",
+                background: "var(--text-primary)",
+                color: "var(--text-primary-w)",
+              }}
+            >
+              Solicitar por correo
+            </button>
           </div>
         </div>
       )}
