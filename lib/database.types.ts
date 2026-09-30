@@ -55,6 +55,31 @@ export interface Database {
         image_url: string;
         alt: string | null;
       }>;
+      // Eventos (supabase/events.sql). A diferencia del catálogo, esta tabla
+      // sí la va a escribir el futuro panel de administración.
+      events: Table<{
+        id: number;
+        slug: string;
+        title: string;
+        event_type: string | null;
+        starts_on: string;
+        ends_on: string | null;
+        time_label: string | null;
+        venue: string | null;
+        city: string;
+        address: string | null;
+        maps_url: string | null;
+        summary: string | null;
+        description: string | null;
+        cover_url: string | null;
+        gallery_urls: string[];
+        video_url: string | null;
+        external_url: string | null;
+        is_published: boolean;
+        featured_on_home: boolean;
+        created_at: string;
+        updated_at: string;
+      }>;
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

@@ -1,7 +1,9 @@
 "use client";
 
 import { ReactNode, useEffect, useRef } from "react";
+import Link from "next/link";
 import { ASSETS } from "@/lib/assets";
+import { OFFERINGS } from "@/lib/offerings";
 
 interface EventItem {
   icon: ReactNode;
@@ -55,24 +57,6 @@ const eventData: EventItem[] = [
     ),
     label: "TIPO DE EVENTO",
     value: "Rueda de prensa",
-  },
-];
-
-const infoCards = [
-  {
-    title: "BODY KITS",
-    description:
-      "Body kits completos de fibra que transforman la silueta de tu vehículo. FRP, CFRP y DRY CARBON disponibles.",
-  },
-  {
-    title: "INSTALACIÓN PROFESIONAL",
-    description:
-      "Centro de servicio oficial certificado Ayala Premium. Garantía de calidad en cada proyecto.",
-  },
-  {
-    title: "ENVÍO DIRECTO DE JAPÓN",
-    description:
-      "Importación directa desde Liberty Walk Japón en Nagoya. Piezas 100% originales.",
   },
 ];
 
@@ -155,6 +139,25 @@ export default function EventSection() {
               introduciendo al país una de las marcas más influyentes y
               reconocidas del mundo en personalización de alto nivel.
             </p>
+            <Link
+              href="/eventos"
+              className="group mb-10 inline-flex items-center gap-2 text-[15px] font-medium uppercase tracking-[2px] md:mb-12"
+              style={{
+                fontFamily: "var(--font-oswald), sans-serif",
+                color: "var(--text-primary)",
+              }}
+            >
+              <span className="relative pb-1">
+                Ver todos los eventos
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-current transition-transform duration-300 ease-out group-hover:scale-x-100"
+                />
+              </span>
+              <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">
+                →
+              </span>
+            </Link>
             {/* LINEA DECORATIVA */}
             <div className="h-[6px] w-[20%] bg-black/70 mb-8" />
           </div>
@@ -198,11 +201,11 @@ export default function EventSection() {
 
         {/* Info cards */}
         <div className="flex flex-col md:flex-row mt-10 md:mt-[54px]">
-          {infoCards.map(({ title, description }, i) => (
+          {OFFERINGS.map(({ title, description }, i) => (
             <div
               key={title}
               className={`flex-1 flex flex-col justify-center px-8 md:px-9 py-8 ${
-                i < infoCards.length - 1
+                i < OFFERINGS.length - 1
                   ? "border-b border-b-[var(--border-default)] md:border-b-0 md:border-r md:border-r-[var(--border-default)]"
                   : ""
               }`}
