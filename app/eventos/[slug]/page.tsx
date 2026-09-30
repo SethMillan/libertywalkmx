@@ -141,8 +141,8 @@ export default async function EventoPage({
 
       <Link
         href="/eventos"
-        className="group mb-6 inline-flex items-center gap-2 text-[14px] font-medium uppercase tracking-[2px] transition-colors hover:text-(--text-primary) md:mb-8"
-        style={{ ...oswald, color: "var(--text-tertiary)" }}
+        className="group mb-6 inline-flex items-center gap-2 text-[14px] font-medium uppercase tracking-[2px] text-(--text-tertiary) transition-colors hover:text-(--text-primary) md:mb-8"
+        style={oswald}
       >
         <span aria-hidden="true" className="transition-transform duration-300 group-hover:-translate-x-1">
           ←
@@ -239,8 +239,8 @@ export default async function EventoPage({
               {live && (
                 <a
                   href={mailtoWithSubject(`Evento: ${event.title}`)}
-                  className="inline-flex h-12 items-center border px-6 text-[14px] font-medium uppercase tracking-[1.5px] transition-colors hover:bg-white hover:text-black"
-                  style={{ ...oswald, borderColor: "rgba(255,255,255,0.5)", color: "var(--text-primary-w)" }}
+                  className="inline-flex h-12 items-center border px-6 text-[14px] font-medium uppercase tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black"
+                  style={{ ...oswald, borderColor: "rgba(255,255,255,0.5)" }}
                 >
                   Pregunta por correo
                 </a>

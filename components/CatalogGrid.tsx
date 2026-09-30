@@ -86,8 +86,7 @@ function FilterModal({
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
-            className="cursor-pointer text-[22px] leading-none transition-colors hover:text-(--text-primary)"
-            style={{ color: "var(--text-tertiary)" }}
+            className="cursor-pointer text-[22px] leading-none text-(--text-tertiary) transition-colors hover:text-(--text-primary)"
           >
             ×
           </button>
@@ -363,8 +362,7 @@ export default function CatalogGrid({ kits }: { kits: CatalogKit[] }) {
               type="button"
               onClick={() => setQuery("")}
               aria-label="Limpiar búsqueda"
-              className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 cursor-pointer items-center justify-center text-[18px] leading-none transition-colors hover:text-(--text-primary)"
-              style={{ color: "var(--text-tertiary)" }}
+              className="absolute right-3 top-1/2 flex h-5 w-5 -translate-y-1/2 cursor-pointer items-center justify-center text-[18px] leading-none text-(--text-tertiary) transition-colors hover:text-(--text-primary)"
             >
               ×
             </button>
