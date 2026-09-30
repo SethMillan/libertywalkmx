@@ -21,7 +21,7 @@ export default async function CatalogSection() {
         >
           APLICACIÓN
         </p>
-        <div className="mb-6 flex w-full items-center justify-between gap-4 md:mb-8">
+        <div className="mb-6 flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-3 md:mb-8">
           <h2
             className="text-[40px] md:text-[70px] font-medium leading-none"
             style={{

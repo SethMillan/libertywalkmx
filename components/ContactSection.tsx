@@ -1,6 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  CONTACT_EMAIL,
+  GOOGLE_MAPS_URL,
+  INSTAGRAM_URL,
+  TIKTOK_URL,
+} from "@/lib/site";
+import {
+  CheckIcon,
+  InstagramIcon,
+  MailIcon,
+  PinIcon,
+  TikTokIcon,
+} from "@/components/icons";
 
 interface FormState {
   nombre: string;
@@ -12,16 +25,101 @@ interface FormState {
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
 
+const EMPTY_FORM: FormState = {
+  nombre: "",
+  email: "",
+  telefono: "",
+  vehiculo: "",
+  proyecto: "",
+};
+
+const FIELDS: Array<{
+  name: Exclude<keyof FormState, "proyecto">;
+  label: string;
+  type: string;
+  autoComplete: string;
+  required?: boolean;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  placeholder?: string;
+}> = [
+  { name: "nombre", label: "Nombre completo", type: "text", autoComplete: "name", required: true },
+  {
+    name: "email",
+    label: "Correo",
+    type: "email",
+    autoComplete: "email",
+    required: true,
+    inputMode: "email",
+    placeholder: "tu@correo.com",
+  },
+  { name: "telefono", label: "Teléfono", type: "tel", autoComplete: "tel", inputMode: "tel" },
+  {
+    name: "vehiculo",
+    label: "Vehículo",
+    type: "text",
+    autoComplete: "off",
+    placeholder: "Marca, modelo y año",
+  },
+];
+
+const oswald: React.CSSProperties = { fontFamily: "var(--font-oswald), sans-serif" };
+const barlow: React.CSSProperties = { fontFamily: "var(--font-barlow), sans-serif" };
+
+// 16px de texto evita que Safari en iPhone haga zoom al enfocar el campo.
+// Los estilos van en clases (no inline) para que el estado de foco funcione.
+const FIELD_CLASS =
+  "block w-full border border-(--border-default) bg-(--bg-surface) px-4 text-[16px] text-(--text-primary) outline-none transition-colors duration-200 placeholder:text-[#8a8a86] hover:border-[rgba(9,9,8,0.45)] focus:border-(--text-primary) focus:bg-white";
+
+const LABEL_CLASS = "mb-2 block text-[12px] font-medium uppercase tracking-[2px]";
+
+function InfoRow({
+  icon,
+  label,
+  children,
+  className = "",
+}: {
+  icon: React.ReactNode;
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`flex items-start gap-4 border-t py-5 ${className}`}
+      style={{ borderColor: "var(--border-default)" }}
+    >
+      <span
+        aria-hidden="true"
+        className="flex h-11 w-11 shrink-0 items-center justify-center text-white"
+        style={{ background: "#090908" }}
+      >
+        {icon}
+      </span>
+      <div className="min-w-0 pt-0.5">
+        <p
+          className="mb-1 text-[12px] font-medium uppercase tracking-[2.4px]"
+          style={{ ...oswald, color: "var(--text-tertiary)" }}
+        >
+          {label}
+        </p>
+        {children}
+      </div>
+    </div>
+  );
+}
+
 export default function ContactSection() {
-  const [form, setForm] = useState<FormState>({
-    nombre: "",
-    email: "",
-    telefono: "",
-    vehiculo: "",
-    proyecto: "",
-  });
+  const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [status, setStatus] = useState<SubmitStatus>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [sentName, setSentName] = useState("");
+  const successRef = useRef<HTMLParagraphElement>(null);
+
+  // Al enviar, el foco pasa a la confirmación para que los lectores de
+  // pantalla la anuncien y el teclado no quede en un campo que ya no existe.
+  useEffect(() => {
+    if (status === "success") successRef.current?.focus();
+  }, [status]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -39,19 +137,11 @@ export default function ContactSection() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        if (data.debug)
-          console.error("[ContactSection] SMTP debug:", data.debug);
         throw new Error(data.error || "Error al enviar");
       }
+      setSentName(form.nombre.trim().split(/\s+/)[0] ?? "");
+      setForm(EMPTY_FORM);
       setStatus("success");
-      setForm({
-        nombre: "",
-        email: "",
-        telefono: "",
-        vehiculo: "",
-        proyecto: "",
-      });
-      setTimeout(() => setStatus("idle"), 1800);
     } catch (err) {
       setErrorMsg(
         err instanceof Error ? err.message : "Error al enviar el correo.",
@@ -60,275 +150,227 @@ export default function ContactSection() {
     }
   };
 
-  const fieldStyle: React.CSSProperties = {
-    fontFamily: "var(--font-barlow), sans-serif",
-    fontSize: 16,
-    color: "var(--text-primary)",
-    outline: "none",
-    width: "100%",
-    background: "rgba(255, 255, 255, 0.7)",
-    border: "none",
-    borderRadius: 6,
-    padding: "14px 16px",
-  };
-
-  const fields: Array<{
-    name: Exclude<keyof FormState, "proyecto">;
-    placeholder: string;
-    type: string;
-    autoComplete: string;
-  }> = [
-    {
-      name: "nombre",
-      placeholder: "Nombre completo",
-      type: "text",
-      autoComplete: "name",
-    },
-    {
-      name: "email",
-      placeholder: "Email",
-      type: "email",
-      autoComplete: "email",
-    },
-    {
-      name: "telefono",
-      placeholder: "Teléfono",
-      type: "tel",
-      autoComplete: "tel",
-    },
-    {
-      name: "vehiculo",
-      placeholder: "Vehículo (Ej: Lamborghini Huracán 2022)",
-      type: "text",
-      autoComplete: "off",
-    },
-  ];
-
   return (
     <section
       id="contacto"
-      className="relative w-full pt-10"
-      style={{ background: "rgba(255,255,255,0.8)" }}
+      className="relative w-full px-6 sm:px-10 md:px-20 xl:px-40 py-16 md:py-24"
+      style={{ background: "var(--bg-surface)" }}
     >
-      <div className="px-5 sm:px-8 md:px-10 lg:px-20 xl:px-40 pt-14 md:pt-16 lg:pt-20 pb-16 ">
-        <div className="mx-auto w-full max-w-6xl ">
-          <div className="mx-auto w-full max-w-4xl text-left mb-12 md:mb-14 px-15">
-            <p
-              className="text-[16px] font-medium tracking-[3.2px] capitalize mb-4"
-              style={{
-                fontFamily: "var(--font-oswald), sans-serif",
-                color: "var(--text-tertiary)",
-              }}
-            >
-              CONTACTO
-            </p>
-            <h2
-              className="font-medium leading-tight mb-5"
-              style={{
-                fontFamily: "var(--font-oswald), sans-serif",
-                color: "var(--text-primary)",
-                fontSize: "clamp(36px, 6vw, 60px)",
-              }}
-            >
-              INICIA TU PROYECTO
-            </h2>
-            <p
-              className="not-italic mb-8 max-w-4xl"
-              style={{
-                fontFamily: "var(--font-barlow), sans-serif",
-                color: "#0c0d0d",
-                fontSize: "clamp(15px, 1.4vw, 18px)",
-                lineHeight: "clamp(1.55, 2.2vw, 1.8)",
-              }}
-            >
-              Cuéntanos sobre tu vehículo y el body kit que te interesa. Nuestro
-              equipo te contactará con información personalizada.
-            </p>
+      <div className="grid items-start gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16 xl:gap-20">
+        {/* ── Información ── */}
+        <div>
+          <div
+            className="mb-4 flex items-center gap-2 text-[18px] font-medium tracking-[3.6px] md:mb-6 md:text-[20px] md:tracking-[4px]"
+            style={{ ...oswald, color: "var(--text-tertiary)" }}
+          >
+            <span style={{ fontFamily: "var(--font-bebas), sans-serif" }}>★</span>
+            <span>CONTACTO</span>
+          </div>
+          <h2
+            className="mb-5 text-[40px] font-medium uppercase leading-[1.05] md:mb-6 md:text-[60px]"
+            style={{ ...oswald, color: "var(--text-primary)" }}
+          >
+            Inicia tu proyecto
+          </h2>
+          <p
+            className="mb-10 max-w-md text-[16px] leading-relaxed md:text-[18px]"
+            style={{ ...barlow, color: "var(--text-secondary)" }}
+          >
+            Cuéntanos sobre tu vehículo y el body kit que te interesa. Nuestro
+            equipo te contactará con información personalizada.
+          </p>
 
-            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-7 md:gap-10">
-              <div>
-                <p
-                  className="text-[14px] font-normal tracking-[2.8px] mb-1"
-                  style={{
-                    fontFamily: "var(--font-oswald), sans-serif",
-                    color: "rgba(12,13,13,0.5)",
-                  }}
-                >
-                  EMAIL
-                </p>
-                <p
-                  className="text-[18px] font-light tracking-[2px]"
-                  style={{
-                    fontFamily: "var(--font-oswald), sans-serif",
-                    color: "var(--text-primary)",
-                  }}
-                >
-                  contacto@libertywalk.com.mx
-                </p>
-              </div>
+          <div className="grid border-b sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-1" style={{ borderColor: "var(--border-default)" }}>
+            <InfoRow icon={<MailIcon className="h-5 w-5" />} label="Correo">
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="text-[17px] text-(--text-primary) underline-offset-4 [overflow-wrap:anywhere] hover:underline"
+                style={barlow}
+              >
+                {CONTACT_EMAIL}
+              </a>
+            </InfoRow>
 
-              <div>
-                <p
-                  className="text-[14px] font-normal tracking-[2.8px] mb-1"
-                  style={{
-                    fontFamily: "var(--font-oswald), sans-serif",
-                    color: "rgba(12,13,13,0.5)",
-                  }}
-                >
-                  UBICACIÓN
-                </p>
-                <p
-                  className="text-[18px] md:text-[19px] lg:text-[20px] font-light tracking-[2px] w-full max-w-xl"
-                  style={{
-                    fontFamily: "var(--font-oswald), sans-serif",
-                    color: "var(--text-primary)",
-                  }}
-                >
-                  Ayala Premium, Morelia, Michoacán, México.
-                </p>
-              </div>
+            <InfoRow icon={<PinIcon className="h-5 w-5" />} label="Ubicación">
+              <a
+                href={GOOGLE_MAPS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[17px] leading-snug text-(--text-primary) underline-offset-4 hover:underline"
+                style={barlow}
+              >
+                Ayala Premium
+                <br />
+                Morelia, Michoacán
+              </a>
+            </InfoRow>
 
-              <div className="flex gap-4 md:pt-6">
-                <a
-                  href="https://www.instagram.com/libertywalkmx?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram Liberty Walk México"
-                  className="cursor-pointer"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="w-6 h-6"
-                    aria-hidden="true"
+            <InfoRow
+              icon={<span className="text-[20px] font-medium leading-none" style={oswald}>@</span>}
+              label="Síguenos"
+              className="sm:col-span-2 lg:col-span-1"
+            >
+              <p className="mb-3 text-[17px]" style={{ ...barlow, color: "var(--text-primary)" }}>
+                @libertywalkmx
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { label: "Instagram", href: INSTAGRAM_URL, icon: <InstagramIcon className="h-4 w-4" /> },
+                  { label: "TikTok", href: TIKTOK_URL, icon: <TikTokIcon className="h-4 w-4" /> },
+                ].map(({ label, href, icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${label} Liberty Walk México`}
+                    className="inline-flex h-9 items-center gap-2 border border-(--border-default) px-3 text-[13px] font-medium uppercase tracking-[1.5px] text-(--text-primary) transition-colors duration-200 hover:border-(--text-primary) hover:bg-(--text-primary) hover:text-white"
+                    style={oswald}
                   >
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
-                  </svg>
-                </a>
-                <a
-                  href="https://www.tiktok.com/@libertywalkmx?_r=1&_t=ZS-96E4MgjvqCK"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="TikTok Liberty Walk México"
-                  className="cursor-pointer"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="w-6 h-6"
-                    aria-hidden="true"
-                  >
-                    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.77 1.52V6.75a4.85 4.85 0 01-1-.06z" />
-                  </svg>
-                </a>
+                    {icon}
+                    {label}
+                  </a>
+                ))}
               </div>
-            </div>
+            </InfoRow>
           </div>
 
-          <div className="w-full flex justify-center px-5">
-            <div
-              className="w-full max-w-3xl border shadow-sm"
-              style={{
-                background: "var(--bg-surface)",
-                borderColor: "var(--border-default)",
-                borderWidth: "0.5px",
-              }}
-            >
-              <form
-                onSubmit={handleSubmit}
-                className="px-6 sm:px-8 md:px-10 pt-8 md:pt-10 pb-8 md:pb-10"
-              >
-                <div className="text-center mb-7 md:mb-8">
-                  <p
-                    className="text-[22px] md:text-[24px] lg:text-[26px] font-medium uppercase"
-                    style={{
-                      fontFamily: "var(--font-oswald), sans-serif",
-                      color: "var(--text-primary)",
-                    }}
-                  >
-                    Solicitar Cotización
-                  </p>
-                  <div
-                    className="mx-auto mt-3 h-px w-24"
-                    style={{ background: "var(--border-default)" }}
-                  />
-                </div>
+          <p
+            className="mt-5 text-[13px] uppercase tracking-[2px]"
+            style={{ ...oswald, color: "var(--text-tertiary)" }}
+          >
+            Servicio y venta a todo México.
+          </p>
+        </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-                  {fields.map(({ name, placeholder, type, autoComplete }) => (
+        {/* ── Formulario ── */}
+        <div className="w-full border bg-white" style={{ borderColor: "var(--border-default)" }}>
+          <div
+            className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 px-5 py-4 sm:px-8 md:py-5 lg:px-10"
+            style={{ background: "#090908" }}
+          >
+            <p
+              className="text-[18px] font-medium uppercase tracking-[1.5px] text-white md:text-[20px]"
+              style={oswald}
+            >
+              Solicitar cotización
+            </p>
+            <p className="text-[14px]" style={{ ...barlow, color: "var(--text-overlay)" }}>
+              Te respondemos por correo
+            </p>
+          </div>
+
+          {status === "success" ? (
+            <div role="status" className="flex flex-col items-start px-5 py-10 sm:px-8 md:py-14 lg:px-10">
+              <span
+                aria-hidden="true"
+                className="mb-6 flex h-14 w-14 items-center justify-center text-white"
+                style={{ background: "#090908" }}
+              >
+                <CheckIcon className="h-7 w-7" />
+              </span>
+              <p
+                ref={successRef}
+                tabIndex={-1}
+                className="mb-3 text-[26px] font-medium uppercase leading-tight outline-none md:text-[30px]"
+                style={{ ...oswald, color: "var(--text-primary)" }}
+              >
+                Solicitud enviada
+              </p>
+              <p
+                className="mb-8 max-w-md text-[16px] leading-relaxed md:text-[18px]"
+                style={{ ...barlow, color: "var(--text-secondary)" }}
+              >
+                {sentName ? `Gracias, ${sentName}. ` : "Gracias. "}
+                Te responderemos por correo.
+              </p>
+              <button
+                type="button"
+                onClick={() => setStatus("idle")}
+                className="inline-flex h-12 items-center border border-(--text-primary) px-6 text-[14px] font-medium uppercase tracking-[1.5px] text-(--text-primary) transition-colors duration-200 hover:bg-(--text-primary) hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                style={oswald}
+              >
+                Enviar otra solicitud
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="px-5 py-6 sm:px-8 sm:py-8 lg:px-10 lg:py-10">
+              <div className="grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2">
+                {FIELDS.map(({ name, label, type, autoComplete, required, inputMode, placeholder }) => (
+                  <div key={name}>
+                    <label
+                      htmlFor={`contacto-${name}`}
+                      className={LABEL_CLASS}
+                      style={{ ...oswald, color: "var(--text-tertiary)" }}
+                    >
+                      {label}
+                      {required && <span aria-hidden="true"> *</span>}
+                    </label>
                     <input
-                      key={name}
+                      id={`contacto-${name}`}
                       type={type}
                       name={name}
                       value={form[name]}
                       onChange={handleChange}
                       autoComplete={autoComplete}
+                      inputMode={inputMode}
                       placeholder={placeholder}
-                      aria-label={placeholder}
-                      className="placeholder:text-[#6a6a67] placeholder:opacity-80 focus:border-[#090908] transition-colors"
-                      style={fieldStyle}
+                      required={required}
+                      className={`${FIELD_CLASS} h-12`}
+                      style={barlow}
                     />
-                  ))}
+                  </div>
+                ))}
 
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor="contacto-proyecto"
+                    className={LABEL_CLASS}
+                    style={{ ...oswald, color: "var(--text-tertiary)" }}
+                  >
+                    ¿Qué kit te interesa?
+                  </label>
                   <textarea
+                    id="contacto-proyecto"
                     name="proyecto"
                     value={form.proyecto}
                     onChange={handleChange}
-                    rows={4}
-                    placeholder="¿Qué kit te interesa? Cuéntanos sobre tu proyecto..."
-                    aria-label="Proyecto"
-                    className="md:col-span-2 placeholder:text-[#6a6a67] placeholder:opacity-80 focus:border-[#090908] transition-colors resize-none"
-                    style={fieldStyle}
+                    rows={5}
+                    placeholder="Cuéntanos sobre tu proyecto..."
+                    className={`${FIELD_CLASS} min-h-[140px] resize-y py-3 leading-relaxed`}
+                    style={barlow}
                   />
                 </div>
+              </div>
 
+              <div aria-live="polite">
                 {status === "error" && (
-                  <p
-                    className="mt-4 text-center text-sm"
-                    style={{
-                      color: "#c0392b",
-                      fontFamily: "var(--font-barlow), sans-serif",
-                    }}
-                  >
+                  <p className="mt-5 text-[15px]" style={{ ...barlow, color: "#c0392b" }}>
                     {errorMsg}
                   </p>
                 )}
+              </div>
 
-                <button
-                  type="submit"
-                  disabled={status === "loading" || status === "success"}
-                  className="group relative overflow-hidden mt-6 h-14 md:h-15 lg:h-16 w-full text-[20px] md:text-[22px] lg:text-[24px] font-medium uppercase cursor-pointer transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-[1.01] hover:shadow-[0_14px_28px_rgba(0,0,0,0.2)] hover:brightness-110 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:scale-100 disabled:hover:shadow-none"
-                  style={{
-                    fontFamily: "var(--font-oswald), sans-serif",
-                    background:
-                      status === "success" ? "#f5f5f3" : "var(--text-primary)",
-                    color:
-                      status === "success"
-                        ? "var(--text-primary)"
-                        : "var(--text-primary-w)",
-                    border:
-                      status === "success"
-                        ? "1px solid rgba(9,9,8,0.2)"
-                        : "none",
-                    transition: "background 0.3s ease, color 0.3s ease",
-                  }}
-                >
-                  {status !== "success" && (
-                    <span
-                      className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-linear-to-r from-transparent via-white/55 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[360%]"
-                      aria-hidden="true"
-                    />
-                  )}
-                  <span className="relative z-10">
-                    {status === "loading" && "ENVIANDO..."}
-                    {status === "success" && "✓ SOLICITUD ENVIADA"}
-                    {(status === "idle" || status === "error") &&
-                      "ENVIAR SOLICITUD →"}
-                  </span>
-                </button>
-              </form>
-            </div>
-          </div>
+              <button
+                type="submit"
+                disabled={status === "loading"}
+                className="group relative mt-6 h-14 w-full cursor-pointer overflow-hidden text-[17px] font-medium uppercase tracking-[2px] text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_14px_28px_rgba(0,0,0,0.2)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:cursor-wait disabled:opacity-80 disabled:hover:translate-y-0 disabled:hover:shadow-none md:text-[18px]"
+                style={{ ...oswald, background: "var(--text-primary)" }}
+              >
+                <span
+                  className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-12 bg-linear-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[360%]"
+                  aria-hidden="true"
+                />
+                <span className="relative z-10">
+                  {status === "loading" ? "Enviando..." : "Enviar solicitud →"}
+                </span>
+              </button>
+
+              <p className="mt-4 text-[14px]" style={{ ...barlow, color: "var(--text-tertiary)" }}>
+                Los campos con * son obligatorios.
+              </p>
+            </form>
+          )}
         </div>
       </div>
     </section>
