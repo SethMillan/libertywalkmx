@@ -338,8 +338,8 @@ export default function NosotrosPage() {
             </Link>
             <Link
               href="/#contacto"
-              className="inline-flex h-12 items-center border px-7 text-[15px] font-medium uppercase tracking-[1.5px] transition-colors hover:bg-white hover:text-black md:h-14 md:px-9"
-              style={{ ...oswald, borderColor: "rgba(255,255,255,0.6)", color: "var(--text-primary-w)" }}
+              className="inline-flex h-12 items-center border px-7 text-[15px] font-medium uppercase tracking-[1.5px] text-white transition-colors hover:bg-white hover:text-black md:h-14 md:px-9"
+              style={{ ...oswald, borderColor: "rgba(255,255,255,0.6)" }}
             >
               Contáctanos
             </Link>

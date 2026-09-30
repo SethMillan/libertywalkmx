@@ -81,11 +81,10 @@ export default function AboutSection() {
           </p>
           <Link
             href="/nosotros"
-            className="group mt-8 inline-flex self-start items-center gap-2 border px-5 py-2.5 text-[14px] font-medium uppercase tracking-[2px] transition-colors duration-200 hover:bg-white hover:text-black"
+            className="group mt-8 inline-flex self-start items-center gap-2 border px-5 py-2.5 text-[14px] font-medium uppercase tracking-[2px] text-white transition-colors duration-200 hover:bg-white hover:text-black"
             style={{
               fontFamily: "var(--font-oswald), sans-serif",
               borderColor: "rgba(255,255,255,0.6)",
-              color: "var(--text-primary-w)",
             }}
           >
             Conoce nuestra historia
@@ -165,11 +164,10 @@ export default function AboutSection() {
           </p>
           <Link
             href="/nosotros"
-            className="group mt-8 inline-flex self-start items-center gap-2 border px-5 py-2.5 text-[14px] font-medium uppercase tracking-[2px] transition-colors duration-200 hover:bg-white hover:text-black"
+            className="group mt-8 inline-flex self-start items-center gap-2 border px-5 py-2.5 text-[14px] font-medium uppercase tracking-[2px] text-white transition-colors duration-200 hover:bg-white hover:text-black"
             style={{
               fontFamily: "var(--font-oswald), sans-serif",
               borderColor: "rgba(255,255,255,0.6)",
-              color: "var(--text-primary-w)",
             }}
           >
             Conoce nuestra historia
@@ -246,11 +244,10 @@ export default function AboutSection() {
           </p>
           <Link
             href="/nosotros"
-            className="group mt-8 inline-flex self-start items-center gap-2 border px-5 py-2.5 text-[14px] font-medium uppercase tracking-[2px] transition-colors duration-200 hover:bg-white hover:text-black"
+            className="group mt-8 inline-flex self-start items-center gap-2 border px-5 py-2.5 text-[14px] font-medium uppercase tracking-[2px] text-white transition-colors duration-200 hover:bg-white hover:text-black"
             style={{
               fontFamily: "var(--font-oswald), sans-serif",
               borderColor: "rgba(255,255,255,0.6)",
-              color: "var(--text-primary-w)",
             }}
           >
             Conoce nuestra historia
