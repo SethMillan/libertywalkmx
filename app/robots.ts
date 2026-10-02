@@ -7,6 +7,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
+      // El panel privado no se indexa (además lleva noindex en sus páginas).
+      disallow: "/admin",
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };

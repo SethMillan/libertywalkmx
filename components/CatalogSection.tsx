@@ -21,7 +21,7 @@ export default async function CatalogSection() {
         >
           APLICACIÓN
         </p>
-        <div className="mb-6 flex w-full items-center justify-between gap-4 md:mb-8">
+        <div className="mb-6 flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-3 md:mb-8">
           <h2
             className="text-[40px] md:text-[70px] font-medium leading-none"
             style={{
@@ -33,10 +33,9 @@ export default async function CatalogSection() {
           </h2>
           <Link
             href="/body-kits"
-            className="group inline-flex shrink-0 items-center gap-2 text-[14px] font-medium uppercase tracking-[2px] transition-colors duration-200 hover:text-(--text-primary) md:text-[16px]"
+            className="group inline-flex shrink-0 items-center gap-2 text-[14px] font-medium uppercase tracking-[2px] text-(--text-tertiary) transition-colors duration-200 hover:text-(--text-primary) md:text-[16px]"
             style={{
               fontFamily: "var(--font-oswald), sans-serif",
-              color: "var(--text-tertiary)",
             }}
           >
             <span className="relative pb-1">

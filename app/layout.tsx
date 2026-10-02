@@ -6,8 +6,7 @@ import {
   Comfortaa,
   Poppins,
 } from "next/font/google";
-import NavBar from "@/components/NavBar";
-import Footer from "@/components/Footer";
+import { SITE_DESCRIPTION, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const oswald = Oswald({
@@ -47,10 +46,7 @@ const poppins = Poppins({
   display: "swap",
 });
 
-const SITE_URL = "https://libertywalk.com.mx";
 const SITE_NAME = "Liberty Walk México";
-const SITE_DESCRIPTION =
-  "Ayala Premium, distribuidor oficial de Liberty Walk en México. Body kits FRP, CFRP y Dry Carbon para Lamborghini, Ferrari, McLaren, Porsche, Nissan y más — importados directo de Japón.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -100,35 +96,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Datos estructurados (schema.org) del negocio, presentes en todas las
-// páginas — ayuda a que Google entienda quiénes somos, dónde estamos y
-// pueda mostrar un rich snippet (dirección, teléfono, redes) en resultados
-// de búsqueda por "Liberty Walk México" / "body kit México".
-const businessJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "AutoPartsStore",
-  name: "Liberty Walk México — Ayala Premium",
-  url: SITE_URL,
-  image: `${SITE_URL}/logo.png`,
-  logo: `${SITE_URL}/logo.png`,
-  description: SITE_DESCRIPTION,
-  telephone: "+52-984-169-8148",
-  email: "contacto@libertywalk.com.mx",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "Av Solidaridad 165, Nueva Chapultepec",
-    addressLocality: "Morelia",
-    addressRegion: "Michoacán",
-    postalCode: "58280",
-    addressCountry: "MX",
-  },
-  areaServed: "MX",
-  sameAs: [
-    "https://www.instagram.com/libertywalkmx",
-    "https://www.tiktok.com/@libertywalkmx",
-  ],
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -139,15 +106,9 @@ export default function RootLayout({
       lang="es"
       className={`${oswald.variable} ${bebasNeue.variable} ${barlowCondensed.variable} ${comfortaa.variable} ${poppins.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJsonLd) }}
-        />
-        <NavBar />
-        <main className="flex flex-col w-full flex-1">{children}</main>
-        <Footer />
-      </body>
+      {/* El NavBar, el Footer y los datos del negocio viven en
+          app/(sitio)/layout.tsx; el panel (app/admin) tiene su propio marco. */}
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }

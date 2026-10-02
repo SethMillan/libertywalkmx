@@ -5,14 +5,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ASSETS } from "@/lib/assets";
 import { slowScrollToHash } from "@/lib/scroll";
+import { NAV_LINKS, isActiveRoute } from "@/lib/navigation";
 
-const NAV_LINKS = [
-  { label: "INICIO", href: "#inicio" },
-  { label: "NOSOTROS", href: "#nosotros" },
-  { label: "EVENTO", href: "#evento" },
-  { label: "BODY KITS", href: "/body-kits" },
-  { label: "CONTACTO", href: "#contacto" },
-];
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -91,7 +85,15 @@ export default function NavBar() {
                   {label}
                 </a>
               ) : (
-                <Link href={href} className="hover:text-white transition-colors">
+                <Link
+                  href={href}
+                  aria-current={isActiveRoute(pathname, href) ? "page" : undefined}
+                  className={`relative transition-colors hover:text-white ${
+                    isActiveRoute(pathname, href)
+                      ? "text-white after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:bg-white"
+                      : ""
+                  }`}
+                >
                   {label}
                 </Link>
               )}
@@ -136,7 +138,10 @@ export default function NavBar() {
               <Link
                 key={label}
                 href={href}
-                className="text-white text-[32px] font-medium tracking-wider"
+                aria-current={isActiveRoute(pathname, href) ? "page" : undefined}
+                className={`text-[32px] font-medium tracking-wider ${
+                  isActiveRoute(pathname, href) ? "text-white underline underline-offset-8" : "text-white/80"
+                }`}
                 style={{ fontFamily: "var(--font-oswald), sans-serif" }}
                 onClick={() => setMenuOpen(false)}
               >
