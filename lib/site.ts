@@ -1,6 +1,8 @@
 // Datos de contacto y redes compartidos por todo el sitio. Todo el contacto
 // es por correo.
 export const SITE_URL = "https://libertywalk.com.mx";
+export const SITE_DESCRIPTION =
+  "Ayala Premium, distribuidor oficial de Liberty Walk en México. Body kits FRP, CFRP y Dry Carbon para Lamborghini, Ferrari, McLaren, Porsche, Nissan y más — importados directo de Japón.";
 // Único correo que se muestra en el sitio (contacto, footer, tarjeta de
 // Ayala Premium, eventos). Ojo: los formularios NO usan esta constante; las
 // rutas /api/contact y /api/order-request envían a contacto@ con copia a

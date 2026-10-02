@@ -170,3 +170,39 @@ Ejemplo para agregar un evento desde el SQL Editor:
 insert into public.events (slug, title, event_type, starts_on, ends_on, time_label, venue, city, summary, cover_url, is_published)
 values ('expo-ejemplo-2026', 'Liberty Walk en Expo Ejemplo', 'Exhibición', '2026-11-14', '2026-11-15', '11:00 a 19:00 h', 'Centro de convenciones', 'Guadalajara', 'Exhibición de autos con kits Liberty Walk.', 'https://…/poster.jpg', true);
 ```
+
+## Panel de administración (/admin)
+
+El sitio tiene una sección privada en [`/admin`](app/admin) para que los encargados agreguen, editen y eliminen eventos y suban sus fotos sin tocar SQL. Está pensada para crecer: body kits, blog, etc. se agregan como nuevas secciones (ver [`lib/admin/sections.ts`](lib/admin/sections.ts)).
+
+### Puesta en marcha (una sola vez)
+
+1. Correr [`supabase/events.sql`](supabase/events.sql) en el SQL Editor (si no se ha corrido).
+2. Correr [`supabase/admin.sql`](supabase/admin.sql): crea `admin_users`, la función `public.is_admin()` y las políticas que dejan escribir en `events` y en el bucket `events` solo a los admins.
+3. Por cada encargado: crear su usuario en **Authentication → Users → Add user** (con "Auto Confirm User") y luego, en el SQL Editor:
+
+```sql
+insert into public.admin_users (user_id, email)
+select id, email from auth.users where email = 'correo@ejemplo.com'
+on conflict (user_id) do nothing;
+```
+
+4. Recomendado: en **Authentication → Sign In / Providers**, desactivar "Allow new users to sign up".
+
+Para quitarle el acceso a alguien: `delete from public.admin_users where email = '...';` (o borrar su usuario en Authentication).
+
+### Cómo está protegido
+
+- **[`proxy.ts`](proxy.ts)** (el "middleware" de Next 16): refresca la sesión y manda a `/admin/login` a quien no tiene sesión.
+- **`requireAdmin()`** ([`lib/admin/auth.ts`](lib/admin/auth.ts)): cada página y cada acción del panel confirma que la sesión sea de alguien en `admin_users`.
+- **RLS en Supabase**: aunque alguien se saltara la app, la base solo deja escribir a quien pase `public.is_admin()`. No se usa la llave privada (service role) en ningún lado.
+
+### Fotos
+
+Se suben directo del navegador al bucket `events` con la sesión del encargado, después de reducirlas a máx. 2000 px y convertirlas a WebP. Al quitar una foto de un evento y guardar, o al eliminar el evento, sus archivos se borran del bucket.
+
+### Agregar una sección nueva
+
+1. Sumar una entrada en [`lib/admin/sections.ts`](lib/admin/sections.ts) (aparece sola en el menú y en el inicio del panel).
+2. Crear sus páginas en `app/admin/(panel)/<seccion>/` llamando a `requireAdmin()` en cada página y acción.
+3. Darle a sus tablas políticas RLS con `public.is_admin()`, igual que `supabase/admin.sql` hace con `events`.

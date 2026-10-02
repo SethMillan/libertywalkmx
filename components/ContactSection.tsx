@@ -14,6 +14,7 @@ import {
   PinIcon,
   TikTokIcon,
 } from "@/components/icons";
+import { FIELD_CLASS, LABEL_CLASS } from "@/components/ui/formStyles";
 
 interface FormState {
   nombre: string;
@@ -64,13 +65,6 @@ const FIELDS: Array<{
 
 const oswald: React.CSSProperties = { fontFamily: "var(--font-oswald), sans-serif" };
 const barlow: React.CSSProperties = { fontFamily: "var(--font-barlow), sans-serif" };
-
-// 16px de texto evita que Safari en iPhone haga zoom al enfocar el campo.
-// Los estilos van en clases (no inline) para que el estado de foco funcione.
-const FIELD_CLASS =
-  "block w-full border border-(--border-default) bg-(--bg-surface) px-4 text-[16px] text-(--text-primary) outline-none transition-colors duration-200 placeholder:text-[#8a8a86] hover:border-[rgba(9,9,8,0.45)] focus:border-(--text-primary) focus:bg-white";
-
-const LABEL_CLASS = "mb-2 block text-[12px] font-medium uppercase tracking-[2px]";
 
 function InfoRow({
   icon,

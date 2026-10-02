@@ -2,9 +2,10 @@
 // Si en algún momento hay acceso al CLI de Supabase, `supabase gen types typescript`
 // puede reemplazar este archivo sin tocar el resto del código (mismos nombres).
 //
-// Esta app solo lee datos (nunca inserta/actualiza desde el frontend), así que
+// El catálogo solo se lee desde el sitio, así que en esas tablas
 // `Insert`/`Update` son copias de `Row` — existen solo porque el generic
 // `GenericTable` de @supabase/postgrest-js los exige, no porque se usen.
+// `events` sí se escribe (panel /admin) y tiene tipos de escritura reales.
 
 interface Table<Row> {
   Row: Row;
@@ -12,6 +13,41 @@ interface Table<Row> {
   Update: Row;
   Relationships: [];
 }
+
+interface WritableTable<Row, Insert> {
+  Row: Row;
+  Insert: Insert;
+  Update: Partial<Insert>;
+  Relationships: [];
+}
+
+export type EventDbRow = {
+  id: number;
+  slug: string;
+  title: string;
+  event_type: string | null;
+  starts_on: string;
+  ends_on: string | null;
+  time_label: string | null;
+  venue: string | null;
+  city: string;
+  address: string | null;
+  maps_url: string | null;
+  summary: string | null;
+  description: string | null;
+  cover_url: string | null;
+  gallery_urls: string[];
+  video_url: string | null;
+  external_url: string | null;
+  is_published: boolean;
+  featured_on_home: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+// Lo obligatorio al crear un evento; el resto tiene default en la base.
+export type EventDbInsert = Pick<EventDbRow, "slug" | "title" | "starts_on" | "city"> &
+  Partial<Omit<EventDbRow, "id" | "created_at" | "updated_at" | "slug" | "title" | "starts_on" | "city">>;
 
 export interface Database {
   public: {
@@ -55,33 +91,16 @@ export interface Database {
         image_url: string;
         alt: string | null;
       }>;
-      // Eventos (supabase/events.sql). A diferencia del catálogo, esta tabla
-      // sí la va a escribir el futuro panel de administración.
-      events: Table<{
-        id: number;
-        slug: string;
-        title: string;
-        event_type: string | null;
-        starts_on: string;
-        ends_on: string | null;
-        time_label: string | null;
-        venue: string | null;
-        city: string;
-        address: string | null;
-        maps_url: string | null;
-        summary: string | null;
-        description: string | null;
-        cover_url: string | null;
-        gallery_urls: string[];
-        video_url: string | null;
-        external_url: string | null;
-        is_published: boolean;
-        featured_on_home: boolean;
-        created_at: string;
-        updated_at: string;
-      }>;
+      // Eventos (supabase/events.sql). Se escribe desde el panel /admin.
+      events: WritableTable<EventDbRow, EventDbInsert>;
+      // Lista de administradores del panel (supabase/admin.sql). Solo lectura
+      // desde la app: las altas se hacen en el SQL Editor.
+      admin_users: Table<{ user_id: string; email: string; created_at: string }>;
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      // ¿La sesión actual es de un administrador? (supabase/admin.sql)
+      is_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
+    };
   };
 }

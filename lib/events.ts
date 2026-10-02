@@ -30,10 +30,10 @@ export interface SiteEvent {
   status: EventStatus;
 }
 
-const EVENT_COLUMNS =
+export const EVENT_COLUMNS =
   "id, slug, title, event_type, starts_on, ends_on, time_label, venue, city, address, maps_url, summary, description, cover_url, gallery_urls, video_url, external_url, featured_on_home";
 
-type EventRow = {
+export type EventRow = {
   id: number;
   slug: string;
   title: string;
@@ -79,7 +79,7 @@ export function isLive(status: EventStatus): boolean {
   return status !== "past";
 }
 
-function mapEvent(row: EventRow, today: string): SiteEvent {
+export function mapEvent(row: EventRow, today: string): SiteEvent {
   return {
     id: row.id,
     slug: row.slug,
