@@ -1,3 +1,5 @@
+import { CONTACT_EMAIL } from "@/lib/site";
+
 // Ayala Premium — dealer card. Réplica del diseño proporcionado (colores,
 // tamaños, animaciones), con los íconos Font Awesome pasados a SVG inline
 // (el sitio no carga Font Awesome).
@@ -7,7 +9,6 @@ const DC_BLACK = "#101010";
 // tenía un azul marino distinto al de los nombres/título).
 const DC_TEXT = DC_BLACK;
 const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/6RNJxb57wUe6D5iZ7";
-const CONTACT_EMAIL = "contacto@libertywalk.com.mx";
 
 const poppins: React.CSSProperties = { fontFamily: "var(--font-poppins), sans-serif" };
 
@@ -52,7 +53,7 @@ function DcRow({
       <span className="flex w-[18px] shrink-0 items-center justify-center" style={{ color: DC_BLACK }}>
         {icon}
       </span>
-      {children}
+      <span className="min-w-0 [overflow-wrap:anywhere]">{children}</span>
     </>
   );
 
@@ -78,7 +79,7 @@ function DcRow({
 }
 
 // Todo el contacto del sitio es por correo: el botón abre un correo a
-// contacto@ con el kit ya puesto en el asunto.
+// Gonzalo (CONTACT_EMAIL) con el kit ya puesto en el asunto.
 function quoteMailto(kitName?: string) {
   const subject = kitName ? `Cotización ${kitName}` : "Cotización Liberty Walk México";
   return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`;
@@ -119,20 +120,9 @@ export default function LocalDealerInfo({ kitName }: { kitName?: string }) {
         <DcRow href="tel:+529841698148" icon={<PhoneIcon />}>
           +52 984 169 8148
         </DcRow>
-        <DcRow href="mailto:gonzalodh@libertywalk.com.mx" icon={<EnvelopeIcon />}>
-          gonzalodh@libertywalk.com.mx
-        </DcRow>
-
-        <hr className="my-5 border-t" style={{ borderColor: "#e2e2e2" }} />
-
-        <p className="mb-1 text-[15px] font-bold" style={{ ...poppins, color: DC_BLACK }}>
-          Omar Ayala García
-        </p>
-        <DcRow href="tel:+524432090069" icon={<PhoneIcon />}>
-          +52 443 209 0069
-        </DcRow>
-        <DcRow href="mailto:omarayala@libertywalk.com.mx" icon={<EnvelopeIcon />}>
-          omarayala@libertywalk.com.mx
+        <DcRow href={`mailto:${CONTACT_EMAIL}`} icon={<EnvelopeIcon />}>
+          {/* Corte de línea preferido después de la @ en pantallas angostas. */}
+          {CONTACT_EMAIL.split("@")[0]}@<wbr />{CONTACT_EMAIL.split("@")[1]}
         </DcRow>
 
         <a

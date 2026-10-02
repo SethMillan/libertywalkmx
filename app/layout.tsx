@@ -8,6 +8,7 @@ import {
 } from "next/font/google";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import { CONTACT_EMAIL } from "@/lib/site";
 import "./globals.css";
 
 const oswald = Oswald({
@@ -113,7 +114,7 @@ const businessJsonLd = {
   logo: `${SITE_URL}/logo.png`,
   description: SITE_DESCRIPTION,
   telephone: "+52-984-169-8148",
-  email: "contacto@libertywalk.com.mx",
+  email: CONTACT_EMAIL,
   address: {
     "@type": "PostalAddress",
     streetAddress: "Av Solidaridad 165, Nueva Chapultepec",
