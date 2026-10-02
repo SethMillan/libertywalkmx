@@ -82,7 +82,7 @@ export default function HeroSection() {
           height: "188%",
           background: "black",
           filter: "blur(100px)",
-          opacity: 0.5,
+          opacity: 0.7,
         }}
         aria-hidden="true"
       />
